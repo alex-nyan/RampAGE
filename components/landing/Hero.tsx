@@ -8,28 +8,30 @@ export function Hero() {
       id="product"
       className="mx-auto grid max-w-[1440px] items-center gap-12 px-6 py-12 md:px-12 lg:grid-cols-[1.05fr_.95fr] lg:gap-8 lg:py-8"
     >
-      <div className="relative flex flex-col self-stretch">
-        <Badge className="mb-6">⚡ RAMP HACKATHON 2026</Badge>
-        <h1 className="mb-6 font-display text-[44px] uppercase leading-[1.02] md:text-[64px]">
-          Corporate spend, but make it{" "}
-          <span className="inline-block -rotate-2 rounded-[10px] bg-night px-3 text-acid">
-            PvP.
-          </span>
-        </h1>
-        <p className="mb-8 max-w-[560px] text-[18px] font-medium leading-relaxed">
-          Rampage turns company-funded perks into multiplayer challenges. Coworkers duel over
-          dinners, outings, and team allowances through skill-based games, while Ramp keeps budgets,
-          approvals, receipts, and controls intact.
-        </p>
-        <div className="mb-7 flex flex-wrap gap-3.5">
-          <NeoButton href="/game/new?game=mines" size="lg">
-            Start a Duel ▸
-          </NeoButton>
-          <NeoButton href="#how" size="lg" variant="ghost">
-            Watch Demo
-          </NeoButton>
+      <div className="relative flex flex-col justify-end self-stretch">
+        <div>
+          <Badge className="mb-6">⚡ RAMP HACKATHON 2026</Badge>
+          <h1 className="mb-6 font-display text-[44px] uppercase leading-[1.02] md:text-[64px]">
+            Corporate spend, but make it{" "}
+            <span className="inline-block -rotate-2 rounded-[10px] bg-night px-3 text-acid">
+              PvP.
+            </span>
+          </h1>
+          <p className="mb-8 max-w-[560px] text-[18px] font-medium leading-relaxed">
+            Rampage turns company-funded perks into multiplayer challenges. Coworkers duel over
+            dinners, outings, and team allowances through skill-based games, while Ramp keeps budgets,
+            approvals, receipts, and controls intact.
+          </p>
+          <div className="mb-7 flex flex-wrap gap-3.5">
+            <NeoButton href="/game/new?game=mines" size="lg" shadow="duel">
+              Start a Duel ▸
+            </NeoButton>
+            <NeoButton href="#how" size="lg" variant="ghost">
+              Watch Demo
+            </NeoButton>
+          </div>
         </div>
-        <div className="mt-auto flex flex-wrap gap-2.5 pt-2">
+        <div className="flex flex-wrap gap-2.5 pt-6">
           {HERO_PILLS.map((p) => (
             <Pill key={p}>{p}</Pill>
           ))}

@@ -83,7 +83,7 @@ export default function ReceiptBlitzGame({ me, state, lastEvent, send, onFinish 
   return (
     <div className="grid grid-cols-2 gap-3">
       <section className="flex min-w-0 flex-col gap-2">
-        <h2 className="font-display text-[10px] uppercase tracking-wide text-noir">
+        <h2 className="flex h-5 items-center font-display text-[10px] uppercase tracking-wide text-noir">
           🧾 Receipts
         </h2>
         {game.receipts.map((r) => {
@@ -93,7 +93,7 @@ export default function ReceiptBlitzGame({ me, state, lastEvent, send, onFinish 
               key={r.id}
               disabled={!!owner}
               onClick={() => setPicked(r.id)}
-              className={`rounded-xl border-[3px] border-noir p-2.5 text-left text-[12px] font-semibold transition ${
+              className={`flex h-[62px] w-full flex-col justify-center rounded-xl border-[3px] border-noir p-2.5 text-left text-[12px] font-semibold transition ${
                 owner
                   ? "bg-cream text-noir/50 shadow-none"
                   : picked === r.id
@@ -117,7 +117,7 @@ export default function ReceiptBlitzGame({ me, state, lastEvent, send, onFinish 
         })}
       </section>
       <section className="flex min-w-0 flex-col gap-2">
-        <h2 className="font-display text-[10px] uppercase tracking-wide text-noir">
+        <h2 className="flex h-5 items-center font-display text-[10px] uppercase tracking-wide text-noir">
           💳 Transactions
         </h2>
         {game.txns.map((t) => (
@@ -125,7 +125,7 @@ export default function ReceiptBlitzGame({ me, state, lastEvent, send, onFinish 
             key={t.id}
             disabled={!!game.matched[t.id] || !picked}
             onClick={() => tryMatch(t.id)}
-            className={`rounded-xl border-[3px] border-noir p-2.5 text-left font-mono text-[11px] transition ${
+            className={`flex h-[62px] w-full flex-col justify-center rounded-xl border-[3px] border-noir p-2.5 text-left font-mono text-[11px] transition ${
               game.matched[t.id]
                 ? "bg-cream text-noir/50 shadow-none"
                 : "bg-white text-noir shadow-brut enabled:hover:-translate-y-0.5 enabled:hover:bg-hot enabled:hover:text-white disabled:opacity-50"

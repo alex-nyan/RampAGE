@@ -30,7 +30,7 @@ export function Nav() {
           </a>
         ))}
       </div>
-      <NeoButton href="/install" size="sm" className="ml-auto lg:ml-0">
+      <NeoButton href="/install" size="sm" shadow="duel" className="ml-auto lg:ml-0">
         Install in Slack
       </NeoButton>
     </nav>

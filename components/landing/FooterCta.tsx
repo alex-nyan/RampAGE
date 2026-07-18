@@ -15,7 +15,7 @@ export function FooterCta() {
       <p className="mb-7 text-[17px] font-medium">
         Your perks budget is already approved. Now make them fight for it.
       </p>
-      <NeoButton href="/install" size="lg">
+      <NeoButton href="/install" size="lg" shadow="duel">
         Install in Slack ▸
       </NeoButton>
       <div id="docs" className="mt-10 text-[12.5px] font-medium text-acid-ink">

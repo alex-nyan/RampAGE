@@ -34,17 +34,23 @@ export function NeoButton({
   href,
   variant = "primary",
   size = "md",
+  shadow = "default",
   className = "",
   children,
 }: {
   href: string;
   variant?: Variant;
   size?: Size;
+  shadow?: "default" | "duel";
   className?: string;
   children: ReactNode;
 }) {
   return (
-    <Link href={href} className={classes(variant, size, className)}>
+    <Link
+      href={href}
+      className={classes(variant, size, className)}
+      style={shadow === "duel" ? { boxShadow: "8px 8px 0 rgba(10,10,10,.35)" } : undefined}
+    >
       {children}
     </Link>
   );

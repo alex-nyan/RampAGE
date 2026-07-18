@@ -102,7 +102,14 @@ export default function DuelRoom() {
   }, [myStake, name, phase, stakeLabel]);
 
   function start() {
-    if (!stakeLabel.trim() || !Number.isFinite(Number(myStake)) || Number(myStake) <= 0) return;
+    const distinctPlayers = new Set(players.map((player) => player.name));
+    if (
+      distinctPlayers.size < 2 ||
+      !stakeLabel.trim() ||
+      !Number.isFinite(Number(myStake)) ||
+      Number(myStake) <= 0
+    )
+      return;
     const mod = getGame(gameId);
     const state = mod.initialState(roomId);
     const s = stakesRef.current;
@@ -318,13 +325,18 @@ export default function DuelRoom() {
                     onClick={name ? start : enter}
                     disabled={
                       (!name && !draft.trim()) ||
+                      (!!name && new Set(players.map((player) => player.name)).size < 2) ||
                       !stakeLabel.trim() ||
                       !Number.isFinite(Number(myStake)) ||
                       Number(myStake) <= 0
                     }
                     className={`${neoBtn} bg-hot py-4 text-[17px] text-white`}
                   >
-                    {name ? "Start game ⚡" : "Join room ⚔️"}{" "}
+                    {name
+                      ? new Set(players.map((player) => player.name)).size < 2
+                        ? "Waiting for opponent…"
+                        : "Start game ⚡"
+                      : "Join room ⚔️"}{" "}
                     {name && pot > 0 ? `— ${money(pot)} total value` : ""}
                   </button>
                 </motion.div>
