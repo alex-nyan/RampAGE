@@ -3,7 +3,7 @@ import { Section, NeoCard } from "@/components/ui";
 import { GAME_MODES } from "@/lib/landing";
 
 const toneClass: Record<string, string> = {
-  night: "bg-night text-white",
+  night: "bg-slate text-white",
   acid: "bg-acid text-night",
   white: "bg-white text-night",
   hot: "bg-hot text-white",
@@ -11,10 +11,10 @@ const toneClass: Record<string, string> = {
 
 export function GameModes() {
   return (
-    <Section id="games" tone="white">
+    <Section id="games" tone="night">
       <div className="mb-9 flex flex-wrap items-baseline gap-4">
         <h2 className="font-display text-[32px] uppercase md:text-[38px]">Game Modes</h2>
-        <span className="text-[15px] font-medium text-black/50">
+        <span className="text-[15px] font-medium text-white/50">
           Pick your weapon. Every game settles a real perk.
         </span>
       </div>
