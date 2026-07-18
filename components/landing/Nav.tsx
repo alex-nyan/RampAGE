@@ -5,7 +5,7 @@ const LINKS = [
   ["Product", "#product"],
   ["Games", "#games"],
   ["How it Works", "#how"],
-  ["Integrations", "#integrations"],
+  ["Leaderboard", "#leaderboard"],
   ["Docs", "#docs"],
 ];
 

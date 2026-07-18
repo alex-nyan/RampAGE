@@ -105,10 +105,21 @@ export const CONTROLS = [
   { title: "Read-only integrations", body: "GitHub and Slack data is observed, never modified." },
 ];
 
-export const INTEGRATIONS = [
-  { name: "Slack", note: "Bot + slash commands", glyph: "#", color: "#E4F222" },
-  { name: "GitHub", note: "Read-only API", glyph: "</>", color: "#fff" },
-  { name: "Ramp", note: "Perks + controls API", glyph: "▲", color: "#FDB515" },
+// Full-section office leaderboard. `you` highlights the viewer's row. Prizes are
+// house-sponsored bonus-pool credit, redeemable via Ramp.
+export const LEADERBOARD_ROWS = [
+  { rank: 1, name: "@xikron", chips: 1940, prize: "3.5 team dinners", streak: "🔥 7-win streak", color: "#E4F222" },
+  { rank: 2, name: "@maya", chips: 1410, prize: "2 offsite passes", streak: "won last 3", color: "#FDB515" },
+  { rank: 3, name: "@rachel_o", chips: 1180, prize: "1 karaoke night", streak: "clutch closer", color: "#F2216E" },
+  { rank: 4, name: "@you", chips: 850, prize: "coffee runs", streak: "climbing ↑", color: "#fff", you: true },
+  { rank: 5, name: "@sam_dev", chips: 790, prize: "lunch credit", streak: "rookie season", color: "#E4F222" },
+];
+
+// Headline stats above the board.
+export const LEADERBOARD_STATS = [
+  { label: "Bonus pool this week", value: "$4,200" },
+  { label: "Duels settled", value: "312" },
+  { label: "Chips in play", value: "6,170" },
 ];
 
 export const TICKER_ONE = Array(4)

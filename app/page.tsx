@@ -6,7 +6,7 @@ import {
   HowItWorks,
   GameModes,
   Safety,
-  Integrations,
+  Leaderboard,
   FooterCta,
 } from "@/components/landing";
 import { TICKER_ONE, TICKER_TWO } from "@/lib/landing";
@@ -23,7 +23,7 @@ export default function Landing() {
       <HowItWorks />
       <GameModes />
       <Safety />
-      <Integrations />
+      <Leaderboard />
       <FooterCta />
       <Ticker text={TICKER_ONE} speed={30} tone="light" />
       <Ticker text={TICKER_TWO} speed={40} tone="acid" />
