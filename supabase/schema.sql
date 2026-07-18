@@ -11,6 +11,7 @@ create table if not exists rooms (
   challenged_slack_id text,
   bonus_pool_cents int not null default 2500,
   stakes jsonb not null default '{}', -- { "<playerName>": stakeCents } (bonus-pool credits)
+  scores jsonb not null default '{}', -- { "<playerName>": finalScore } (persisted on finish)
   winner text,
   created_at timestamptz not null default now()
 );

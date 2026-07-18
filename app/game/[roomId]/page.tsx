@@ -6,10 +6,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import type { RealtimeChannel } from "@supabase/supabase-js";
-import { joinRoom, sendEvent, getRoomState, supabase } from "@/lib/supabase";
+import { joinRoom, sendEvent, ensureRoom, saveRoomResult, supabase } from "@/lib/supabase";
 import { awardBonusCredit } from "@/lib/ramp";
 import { getGame } from "@/lib/games/registry";
 import { DEFAULT_STAKE_CENTS, matchedPotCents, oddsLabel, potCents, winnerPayoutCents } from "@/lib/wager";
@@ -22,6 +22,9 @@ const neoBtn =
 
 export default function DuelRoom() {
   const { roomId } = useParams<{ roomId: string }>();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [ready, setReady] = useState(false);
   const [name, setName] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
   const [players, setPlayers] = useState<Player[]>([]);
@@ -42,12 +45,40 @@ export default function DuelRoom() {
 
   useEffect(() => {
     setName(sessionStorage.getItem("rampage_name"));
-    setRoomUrl(window.location.href);
-    getRoomState(roomId).then((room) => room?.game && setGameId(room.game));
-  }, [roomId]);
+  }, []);
+
+  // Guarantee a real, persistable room row before anything is played. "new", typed
+  // codes, and stale ids get a fresh UUID room and we normalize the URL to it — so
+  // the stake / result / payout writes below always land in Supabase (see ensureRoom).
+  useEffect(() => {
+    let cancelled = false;
+    const wanted = searchParams.get("game") ?? "receipt-blitz";
+    ensureRoom(roomId, wanted)
+      .then(({ id, game }) => {
+        if (cancelled) return;
+        if (id !== roomId) {
+          router.replace(`/game/${id}`); // re-runs this effect with the real room id
+          return;
+        }
+        setGameId(game);
+        setRoomUrl(window.location.href);
+        setReady(true);
+      })
+      .catch(() => {
+        // Storage unreachable — let the duel proceed on the URL id (realtime still
+        // works; the result just won't persist) rather than blocking the demo.
+        if (cancelled) return;
+        setGameId(wanted);
+        setRoomUrl(window.location.href);
+        setReady(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [roomId, router, searchParams]);
 
   useEffect(() => {
-    if (!name || !roomId) return;
+    if (!name || !ready) return;
     const channel = joinRoom(roomId, name, {
       onEvent: (raw: unknown) => {
         const e = raw as GameEvent;
@@ -73,7 +104,7 @@ export default function DuelRoom() {
     return () => {
       channel.unsubscribe();
     };
-  }, [name, roomId]);
+  }, [name, roomId, ready]);
 
   useEffect(() => {
     if (!name || phase !== "pending" || !channelRef.current) return;
@@ -98,6 +129,8 @@ export default function DuelRoom() {
     setWinner(w);
     setPhase("finished");
     if (channelRef.current) sendEvent(channelRef.current, { type: "finish", winner: w, scores: sc });
+    // Persist the full result (scores + game-state snapshot) so it survives a refresh.
+    saveRoomResult(roomId, { winner: w, scores: sc, stakes: stakesRef.current }).catch(() => {});
     // Each client credits only ITS OWN payout — no double-pays.
     const mode = getGame(gameId).payoutMode ?? "skill";
     const award = payouts
