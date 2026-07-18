@@ -117,6 +117,33 @@ export type MinesMove =
   /** Full snapshot — preferred sync so late/missed events still converge. */
   | { type: "sync"; state: MinesState };
 
+// --- Predict (LIVE multi-person prediction market) ---
+// A shared, always-live board of hardcoded PUBLIC / EXTERNAL yes/no events.
+// Anyone can bet their bonus chips on either side; the pool + implied odds move
+// live for every viewer via Supabase realtime (no 1v1 room, no QR). Positive-sum
+// — chips are house-granted bonus credit, never a personal allowance, and events
+// settle on public data, never on a coworker's output.
+export type PredictSide = "yes" | "no";
+
+export type PredictEvent = {
+  id: string;
+  question: string;
+  source: string; // how it resolves — public/external, keeps it defensible
+  category: string; // Markets / Weather / AI / Office …
+  closesLabel: string; // flavor, e.g. "Closes Fri 5pm"
+  seedYesCents: number; // seeded crowd pool so the board is never empty
+  seedNoCents: number;
+};
+
+// One live bet — broadcast to every viewer and shown in the ticker.
+export type PredictBet = {
+  eventId: string;
+  side: PredictSide;
+  amountCents: number;
+  by: string; // display name
+  at: number;
+};
+
 // Shared room events plus opaque per-game moves.
 export type GameEvent =
   | { type: "stake"; by: string; label?: string; amountCents: number }

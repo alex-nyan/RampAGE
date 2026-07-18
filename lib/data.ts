@@ -1,5 +1,5 @@
 // Seed data — the demo never shows an empty state.
-import type { GameMeta, PlayerStat, Txn } from "./types";
+import type { GameMeta, PlayerStat, PredictEvent, Txn } from "./types";
 
 export const HOUSE_POT = 12400;
 
@@ -42,6 +42,66 @@ export const GAMES: GameMeta[] = [
     badge: { label: "CHALLENGE", tone: "amber" },
     href: "/game/split-or-steal",
     live: true,
+  },
+  {
+    id: "predict",
+    name: "Predict",
+    blurb: "Live market · bet chips on public events · the whole office plays",
+    badge: { label: "LIVE", tone: "green" },
+    href: "/predict",
+    live: true,
+  },
+];
+
+// Predict — the LIVE market board. Every event is opt-in and settles on a
+// PUBLIC / EXTERNAL outcome (markets, weather, public leaderboards, communal
+// stuff) — never on a coworker's work, output, or reactions. Pools are seeded
+// so the board is never empty; the whole office bets their bonus chips live.
+export const PREDICT_EVENTS: PredictEvent[] = [
+  {
+    id: "hackathon_midnight",
+    question: "Will this hackathon run past midnight?",
+    source: "An opt-in team over/under — public, no surveillance.",
+    category: "Office",
+    closesLabel: "Closes 11:59pm",
+    seedYesCents: 46000,
+    seedNoCents: 14000,
+  },
+  {
+    id: "btc_friday",
+    question: "Will Bitcoin close above its Monday price this Friday?",
+    source: "Settles on the public BTC/USD Friday close — an external market.",
+    category: "Markets",
+    closesLabel: "Closes Fri 4pm ET",
+    seedYesCents: 52000,
+    seedNoCents: 33500,
+  },
+  {
+    id: "llm_arena",
+    question: "Will an open-weights model top this week's public LLM arena?",
+    source: "Settles on the public LMArena leaderboard — no coworker's work involved.",
+    category: "AI",
+    closesLabel: "Closes Fri 5pm",
+    seedYesCents: 18500,
+    seedNoCents: 41200,
+  },
+  {
+    id: "sf_70",
+    question: "Will it break 70°F in SF this weekend?",
+    source: "Settles on the public NWS forecast — weather, not a person.",
+    category: "Weather",
+    closesLabel: "Closes Sat 9am",
+    seedYesCents: 12000,
+    seedNoCents: 28800,
+  },
+  {
+    id: "office_plant",
+    question: "Will the office plant still be alive on payday? 🌱",
+    source: "Communal & opt-in — and it is, frankly, overdue for a watering.",
+    category: "Office",
+    closesLabel: "Closes payday",
+    seedYesCents: 30500,
+    seedNoCents: 9500,
   },
 ];
 
