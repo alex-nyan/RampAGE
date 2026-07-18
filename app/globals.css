@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  /* type */
+  --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex), ui-monospace, monospace;
+
+  /* surfaces */
+  --color-page: #eef0ec;
+  --color-paper: #fafaf8;
+  --color-card: #ffffff;
+  --color-line: #e7e7e0;
+  --color-ink: #17171c;
+  --color-ink-2: #1d1d24;
+  --color-ink-3: #22222a;
+  --color-ink-4: #2a2a32;
+
+  /* brand green */
+  --color-brand: #12805c;
+  --color-brand-dark: #0f6b4d;
+  --color-brand-soft: #eaf5f0;
+  --color-brand-bright: #2eb98a;
+
+  /* pot amber */
+  --color-gold: #f3c76b;
+  --color-gold-deep: #d9a13b;
+  --color-gold-ink: #a4702a;
+  --color-gold-mid: #c98a2e;
+  --color-gold-soft: #fdf1dc;
+  --color-gold-wash: #fdf6e8;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--color-page);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes potpulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.potpulse { animation: potpulse 4s ease-in-out infinite; }
+.blink { animation: blink 1.1s step-end infinite; }
+
+/* thin, quiet scrollbars inside the phone frame */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
