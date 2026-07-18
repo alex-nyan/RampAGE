@@ -8,6 +8,7 @@ export type GameId =
   | "receipt-blitz"
   | "fraudle"
   | "split-or-steal"
+  | "wordle-duel"
   | "flip"
   | "mines"
   | "predict";

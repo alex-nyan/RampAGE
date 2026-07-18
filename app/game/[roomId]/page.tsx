@@ -93,7 +93,7 @@ export default function DuelRoom() {
     supabase.from("rooms").update({ stakes: s, status: "active" }).eq("id", roomId).then();
   }
 
-  function handleFinish(w: string, sc: Record<string, number>, payouts?: Record<string, number>) {
+  async function handleFinish(w: string, sc: Record<string, number>, payouts?: Record<string, number>) {
     if (phase === "finished") return;
     setWinner(w);
     setPhase("finished");
@@ -105,20 +105,26 @@ export default function DuelRoom() {
       : w === name
         ? winnerPayoutCents(stakesRef.current, mode)
         : 0;
-    if (award > 0 && name)
-      awardBonusCredit({ roomId, userName: name, amountCents: award, memo: `${getGame(gameId).name} payout` }).then(
-        (r) => r.ok && setAwardMsg(`+${chips(award)} house bonus credited`)
-      );
+    if (award > 0 && name) {
+      const awardResult = await awardBonusCredit({
+        roomId,
+        userName: name,
+        amountCents: award,
+        memo: `${getGame(gameId).name} payout`,
+      });
+      if (awardResult.ok) setAwardMsg(`+${chips(award)} house bonus credited`);
+    }
     // Post the result back to the Slack channel the challenge came from
     // (no-op for web-created rooms). Only the winner's client fires it.
     const reportedPot = payouts
       ? Object.values(payouts).reduce((a, b) => a + b, 0)
       : winnerPayoutCents(stakesRef.current, mode);
     if (w === name || (payouts && Object.keys(payouts)[0] === name))
-      fetch(`/api/rooms/${roomId}/finish`, {
+      await fetch(`/api/rooms/${roomId}/finish`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ winner: w, potCents: reportedPot, gameName: getGame(gameId).name }),
-      }).catch(() => {});
+      }).catch(() => null);
   }
 
   function copyLink() {

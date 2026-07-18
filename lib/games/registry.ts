@@ -3,7 +3,7 @@ import type { ComponentType } from "react";
 import type { GameId, Player } from "@/lib/types";
 import ReceiptBlitzGame, { initialReceiptBlitzState } from "@/components/games/receipt-blitz/Game";
 import FlipGame, { initialFlipState } from "@/components/games/flip/Game";
-import SplitOrStealGame, { initialSplitState } from "@/components/games/split-or-steal/Game";
+import WordleDuelGame, { initialWordleState } from "@/components/games/wordle-duel/Game";
 import MinesGame from "@/components/games/mines/Game";
 import { initialMinesState } from "@/lib/games/mines/rules";
 
@@ -49,12 +49,12 @@ export const REGISTRY: Partial<Record<GameId, GameModule>> = {
     initialState: initialFlipState,
     payoutMode: "chance",
   },
-  "split-or-steal": {
-    id: "split-or-steal",
-    name: "Split or Steal",
-    description: "Trust game — both split the pot, or gamble on stealing it all.",
-    Component: SplitOrStealGame,
-    initialState: initialSplitState,
+  "wordle-duel": {
+    id: "wordle-duel",
+    name: "Word Duel",
+    description: "Race your coworker to solve the same five-letter word in one minute.",
+    Component: WordleDuelGame,
+    initialState: initialWordleState,
     payoutMode: "skill",
   },
   mines: {

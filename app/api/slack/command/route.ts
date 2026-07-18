@@ -44,13 +44,13 @@ export async function POST(req: Request) {
       .replace(/@[\w.\-]+/g, "")
       .trim()
       .split(/\s+/)[0]?.toLowerCase() ?? "";
-  const gameId = ["receipt-blitz", "flip", "split-or-steal", "mines"].includes(gameToken)
+  const gameId = ["receipt-blitz", "flip", "wordle-duel", "mines"].includes(gameToken)
     ? gameToken
     : "receipt-blitz";
   const gameNames: Record<string, string> = {
     "receipt-blitz": "Receipt Match Blitz",
     flip: "Flip",
-    "split-or-steal": "Split or Steal",
+    "wordle-duel": "Word Duel",
     mines: "Mines Duel",
   };
 

@@ -32,6 +32,6 @@ export async function POST(req: Request, ctx: { params: Promise<{ roomId: string
     ? `🎲 *${gameName ?? "Duel"}* is settled: ${winner}. The pot stays in the family 🎁`
     : `🏆 *${winner}* wins *${gameName ?? "the duel"}*${pot} 🎁 Redeemable on food orders via a Ramp merchant-locked card.\n${top ? `Leaderboard: ${top}` : ""}`;
 
-  await postResult({ channelId: room.slack_channel_id, text });
-  return NextResponse.json({ ok: true, posted: true });
+  const result = await postResult({ channelId: room.slack_channel_id, text });
+  return NextResponse.json({ ok: result.ok, posted: result.ok });
 }
