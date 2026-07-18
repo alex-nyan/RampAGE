@@ -3,8 +3,19 @@
 
 export const DEFAULT_STAKE_CENTS = 1000; // ◆10 / $10 slice
 
+export type PayoutMode = "chance" | "skill";
+
 export function potCents(stakes: Record<string, number>): number {
   return Object.values(stakes).reduce((a, b) => a + b, 0);
+}
+
+// Contested amount for skill games: only 2× the smaller stake is on the line.
+// Staking less caps your upside — you can't win the opponent's unmatched excess.
+export function matchedPotCents(stakes: Record<string, number>): number {
+  const vals = Object.values(stakes).filter((v) => v > 0);
+  if (vals.length === 0) return 0;
+  if (vals.length === 1) return vals[0];
+  return 2 * Math.min(...vals);
 }
 
 // EV-fair win probability for a player who staked `mine` vs a pot including it:
@@ -29,11 +40,31 @@ export function pickWinner(stakes: Record<string, number>, roll: number): string
   return entries[entries.length - 1][0];
 }
 
-// For skill games the winner just takes the pot; use this to describe the odds line.
-export function oddsLabel(stakes: Record<string, number>, me: string): string {
-  const pot = potCents(stakes);
+// Chance (flip): winner takes full pot; fairness is via winProbability.
+// Skill (mines, etc.): winner takes matched pot only — low stake ≠ full pot.
+export function winnerPayoutCents(
+  stakes: Record<string, number>,
+  mode: PayoutMode = "skill"
+): number {
+  return mode === "chance" ? potCents(stakes) : matchedPotCents(stakes);
+}
+
+export function oddsLabel(
+  stakes: Record<string, number>,
+  me: string,
+  mode: PayoutMode = "skill"
+): string {
   const mine = stakes[me] ?? 0;
-  if (!pot || !mine) return "";
-  const multiple = pot / mine;
-  return `stake ◆${(mine / 100).toFixed(0)} → win ◆${(pot / 100).toFixed(0)} (${multiple.toFixed(2)}x)`;
+  if (!mine) return "";
+  if (mode === "chance") {
+    const pot = potCents(stakes);
+    if (!pot) return "";
+    const p = winProbability(mine, pot);
+    return `stake ◆${(mine / 100).toFixed(0)} → ${(p * 100).toFixed(0)}% shot at ◆${(pot / 100).toFixed(0)}`;
+  }
+  const matched = matchedPotCents(stakes);
+  const pot = potCents(stakes);
+  const excess = Math.max(0, pot - matched);
+  const base = `stake ◆${(mine / 100).toFixed(0)} → win ◆${(matched / 100).toFixed(0)}`;
+  return excess > 0 ? `${base} (matched; ◆${(excess / 100).toFixed(0)} excess sits out)` : base;
 }

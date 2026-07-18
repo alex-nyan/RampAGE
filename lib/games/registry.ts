@@ -7,6 +7,8 @@ import SplitOrStealGame, { initialSplitState } from "@/components/games/split-or
 import MinesGame from "@/components/games/mines/Game";
 import { initialMinesState } from "@/lib/games/mines/rules";
 
+import type { PayoutMode } from "@/lib/wager";
+
 // Props every game component receives from the room shell.
 export type GameProps = {
   roomId: string;
@@ -16,7 +18,7 @@ export type GameProps = {
   state: unknown; // initial state broadcast with the start event
   lastEvent: { by: string; data: unknown } | null; // last "move" from the other client
   send: (data: unknown) => void; // broadcast a move
-  // payouts: optional per-player cents (split outcomes). Omitted = winner takes pot.
+  // payouts: optional per-player cents (split outcomes). Omitted = shell uses payoutMode.
   onFinish: (winner: string, scores: Record<string, number>, payouts?: Record<string, number>) => void;
 };
 
@@ -26,6 +28,8 @@ export type GameModule = {
   description: string;
   Component: ComponentType<GameProps>;
   initialState: (roomId: string) => unknown;
+  /** chance = full pot via odds; skill = matched pot (2× min stake). Default skill. */
+  payoutMode?: PayoutMode;
 };
 
 export const REGISTRY: Partial<Record<GameId, GameModule>> = {
@@ -35,6 +39,7 @@ export const REGISTRY: Partial<Record<GameId, GameModule>> = {
     description: "Match receipts to card transactions faster than your opponent.",
     Component: ReceiptBlitzGame,
     initialState: initialReceiptBlitzState,
+    payoutMode: "skill",
   },
   flip: {
     id: "flip",
@@ -42,6 +47,7 @@ export const REGISTRY: Partial<Record<GameId, GameModule>> = {
     description: "Stake-weighted coin flip — odds auto-adjust so EV is fair.",
     Component: FlipGame,
     initialState: initialFlipState,
+    payoutMode: "chance",
   },
   "split-or-steal": {
     id: "split-or-steal",
@@ -49,6 +55,7 @@ export const REGISTRY: Partial<Record<GameId, GameModule>> = {
     description: "Trust game — both split the pot, or gamble on stealing it all.",
     Component: SplitOrStealGame,
     initialState: initialSplitState,
+    payoutMode: "skill",
   },
   mines: {
     id: "mines",
@@ -56,6 +63,7 @@ export const REGISTRY: Partial<Record<GameId, GameModule>> = {
     description: "One places 5 mines on a 6×6 — the other clears every safe cell.",
     Component: MinesGame,
     initialState: initialMinesState,
+    payoutMode: "skill",
   },
 };
 

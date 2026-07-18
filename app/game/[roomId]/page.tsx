@@ -12,7 +12,7 @@ import type { RealtimeChannel } from "@supabase/supabase-js";
 import { joinRoom, sendEvent, getRoomState, supabase } from "@/lib/supabase";
 import { awardBonusCredit } from "@/lib/ramp";
 import { getGame } from "@/lib/games/registry";
-import { DEFAULT_STAKE_CENTS, potCents } from "@/lib/wager";
+import { DEFAULT_STAKE_CENTS, matchedPotCents, oddsLabel, potCents, winnerPayoutCents } from "@/lib/wager";
 import type { GameEvent, Player } from "@/lib/types";
 
 const chips = (c: number) => `◆${(c / 100).toFixed(0)}`;
@@ -99,18 +99,25 @@ export default function DuelRoom() {
     setPhase("finished");
     if (channelRef.current) sendEvent(channelRef.current, { type: "finish", winner: w, scores: sc });
     // Each client credits only ITS OWN payout — no double-pays.
-    const pot = potCents(stakesRef.current) || DEFAULT_STAKE_CENTS * 2;
-    const myCut = payouts ? Math.round(payouts[name!] ?? 0) : w === name ? pot : 0;
-    if (myCut > 0 && name)
-      awardBonusCredit({ roomId, userName: name, amountCents: myCut, memo: `${getGame(gameId).name} payout` }).then(
-        (r) => r.ok && setAwardMsg(`+${chips(myCut)} house bonus credited`)
+    const mode = getGame(gameId).payoutMode ?? "skill";
+    const award = payouts
+      ? Math.round(payouts[name!] ?? 0)
+      : w === name
+        ? winnerPayoutCents(stakesRef.current, mode)
+        : 0;
+    if (award > 0 && name)
+      awardBonusCredit({ roomId, userName: name, amountCents: award, memo: `${getGame(gameId).name} payout` }).then(
+        (r) => r.ok && setAwardMsg(`+${chips(award)} house bonus credited`)
       );
     // Post the result back to the Slack channel the challenge came from
     // (no-op for web-created rooms). Only the winner's client fires it.
+    const reportedPot = payouts
+      ? Object.values(payouts).reduce((a, b) => a + b, 0)
+      : winnerPayoutCents(stakesRef.current, mode);
     if (w === name || (payouts && Object.keys(payouts)[0] === name))
       fetch(`/api/rooms/${roomId}/finish`, {
         method: "POST",
-        body: JSON.stringify({ winner: w, potCents: pot, gameName: getGame(gameId).name }),
+        body: JSON.stringify({ winner: w, potCents: reportedPot, gameName: getGame(gameId).name }),
       }).catch(() => {});
   }
 
@@ -129,6 +136,9 @@ export default function DuelRoom() {
 
   const mod = getGame(gameId);
   const pot = potCents(stakes);
+  const contested = matchedPotCents(stakes);
+  const payoutMode = mod.payoutMode ?? "skill";
+  const myOdds = name ? oddsLabel(stakes, name, payoutMode) : "";
 
   if (!name)
     return (
@@ -186,8 +196,10 @@ export default function DuelRoom() {
 
         <div className="flex items-baseline justify-between">
           <h1 className="font-display text-[26px] uppercase">{mod.name}</h1>
-          {pot > 0 && (
-            <span className="font-mono text-[12px] font-bold text-hot">POT {chips(pot)}</span>
+          {contested > 0 && (
+            <span className="font-mono text-[12px] font-bold text-hot">
+              {payoutMode === "chance" ? `POT ${chips(pot)}` : `MATCHED ${chips(contested)}`}
+            </span>
           )}
         </div>
 
@@ -214,8 +226,13 @@ export default function DuelRoom() {
                 <span className="w-14 text-right font-mono text-[17px] font-bold text-hot">◆{myStake}</span>
               </div>
               <p className="mt-1 text-[10px] text-night/45">
-                Uneven stakes? Odds auto-adjust so the match stays EV-fair.
+                {payoutMode === "chance"
+                  ? "Uneven stakes? Win chance scales with your stake — EV stays fair."
+                  : "Uneven stakes? Only 2× the smaller stake is contested — staking less caps your win."}
               </p>
+              {myOdds && (
+                <p className="mt-1 font-mono text-[10px] text-night/55">{myOdds}</p>
+              )}
             </div>
 
             {players.length < 2 && roomUrl && (
@@ -242,7 +259,12 @@ export default function DuelRoom() {
             )}
 
             <button onClick={start} className={`${neoBtn} bg-hot py-4 text-[17px] text-white`}>
-              Start ⚡ {pot > 0 ? `— winner takes ${chips(pot)}` : ""}
+              Start ⚡{" "}
+              {contested > 0
+                ? payoutMode === "chance"
+                  ? `— winner takes ${chips(pot)}`
+                  : `— winner takes ${chips(contested)}`
+                : ""}
             </button>
           </motion.div>
         )}
