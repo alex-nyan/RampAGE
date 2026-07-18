@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Section } from "@/components/ui";
 
 export function SlackPreview() {
@@ -17,9 +18,15 @@ export function SlackPreview() {
 
         <div className="rounded-2xl border-[3px] border-[#333] bg-slate p-5 text-[14px]">
           <div className="mb-4 flex gap-2.5">
-            <div className="h-9 w-9 flex-none rounded-lg border-2 border-night bg-amber" />
+            <Image
+              src="/carrie.jpg"
+              alt="Carrie"
+              width={36}
+              height={36}
+              className="h-9 w-9 flex-none rounded-lg border-2 border-night object-cover object-[50%_42%]"
+            />
             <div>
-              <b>xikron</b> <span className="text-[11px] text-white/45">11:37 AM</span>
+              <b>carrie</b> <span className="text-[11px] text-white/45">11:37 AM</span>
               <div className="mt-1 leading-relaxed text-white/85">
                 hey <MentionTag>@rampage</MentionTag> start a prediction duel with{" "}
                 <MentionTag>@nyan</MentionTag> for who can get the most PRs merged this week at 0.5x /
@@ -28,9 +35,13 @@ export function SlackPreview() {
             </div>
           </div>
           <div className="flex gap-2.5">
-            <div className="grid h-9 w-9 flex-none place-items-center rounded-lg border-2 border-night bg-acid font-display text-[14px] text-night">
-              R
-            </div>
+            <Image
+              src="/rampage-slack-bot.png"
+              alt="Rampage Slack bot"
+              width={36}
+              height={36}
+              className="h-9 w-9 flex-none rounded-lg border-2 border-night object-cover"
+            />
             <div className="flex-1">
               <b>rampage</b>{" "}
               <span className="rounded bg-[#333] px-1.5 py-0.5 text-[10px]">APP</span>{" "}
