@@ -26,8 +26,8 @@ export function Hero() {
             <NeoButton href="/game/new?game=mines" size="lg" shadow="duel">
               Start a Duel ▸
             </NeoButton>
-            <NeoButton href="#how" size="lg" variant="ghost">
-              Watch Demo
+            <NeoButton href="/predict" size="lg" variant="ghost">
+              📈 Prediction Market
             </NeoButton>
           </div>
         </div>
