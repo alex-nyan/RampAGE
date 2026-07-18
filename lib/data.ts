@@ -22,6 +22,13 @@ export const GAMES: GameMeta[] = [
     live: true,
   },
   {
+    id: "flip",
+    name: "Flip",
+    blurb: "Stake-weighted coin · odds auto-adjust · 10s",
+    badge: { label: "CHALLENGE", tone: "amber" },
+    live: true, // no href — lobby creates a room
+  },
+  {
     id: "split-or-steal",
     name: "Split or Steal",
     blurb: "Trust game · split the bonus lunch pot or gamble for it all",

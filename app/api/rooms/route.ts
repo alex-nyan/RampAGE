@@ -13,6 +13,7 @@ export async function POST(req: Request) {
       challenger_slack_id: body.challengerSlackId ?? null,
       challenged_slack_id: body.challengedSlackId ?? null,
       status: body.status ?? "active",
+      game: body.gameId ?? "receipt-blitz",
       bonus_pool_cents: DEFAULT_BONUS_POOL_CENTS,
     })
     .select()

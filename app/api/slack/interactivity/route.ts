@@ -1,4 +1,6 @@
 // Accept/decline button clicks. Slack sends payload=<json> form field.
+// IMPORTANT: for block actions Slack IGNORES the ack body — message updates
+// must be POSTed to payload.response_url. Ack fast + empty.
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifySlack } from "@/lib/slack";
@@ -11,18 +13,27 @@ export async function POST(req: Request) {
   const payload = JSON.parse(new URLSearchParams(raw).get("payload") ?? "{}");
   const action = payload.actions?.[0];
   const roomId = action?.value;
+  const responseUrl: string | undefined = payload.response_url;
   const base = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+
+  async function respond(text: string) {
+    if (!responseUrl) return;
+    await fetch(responseUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ replace_original: true, response_type: "in_channel", text }),
+    }).catch(() => {});
+  }
 
   if (action?.action_id === "accept" && roomId) {
     await supabase.from("rooms").update({ status: "active" }).eq("id", roomId);
-    return NextResponse.json({
-      replace_original: true,
-      text: `⚔️ It's ON — play here: ${base}/game/${roomId} 🎁 (winner grabs a slice of the bonus pool)`,
-    });
-  }
-  if (action?.action_id === "decline" && roomId) {
+    await respond(
+      `⚔️ It's ON — play here: ${base}/game/${roomId} 🎁 (winner grabs a slice of the bonus pool)`
+    );
+  } else if (action?.action_id === "decline" && roomId) {
     await supabase.from("rooms").update({ status: "finished" }).eq("id", roomId);
-    return NextResponse.json({ replace_original: true, text: "Challenge declined. The bonus pool remains unclaimed... for now 👀" });
+    await respond("Challenge declined. The bonus pool remains unclaimed... for now 👀");
   }
-  return NextResponse.json({ ok: true });
+
+  return new NextResponse("", { status: 200 });
 }

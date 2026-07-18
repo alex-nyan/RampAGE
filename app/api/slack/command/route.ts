@@ -14,6 +14,9 @@ export async function POST(req: Request) {
   const text = form.get("text") ?? ""; // "<@U123|sam> mines"
   const mention = /<@([A-Z0-9]+)(?:\|([^>]+))?>/.exec(text);
   const challengedId = mention?.[1] ?? null;
+  // Optional game after the mention: "/rampage @sam flip"
+  const gameToken = text.replace(/<@[^>]+>/, "").trim().split(/\s+/)[0]?.toLowerCase();
+  const gameId = ["receipt-blitz", "flip"].includes(gameToken) ? gameToken : "receipt-blitz";
 
   const [challenger, challenged] = await Promise.all([
     resolveUser(challengerId),
@@ -28,6 +31,7 @@ export async function POST(req: Request) {
       challenger_slack_id: challengerId,
       challenged_slack_id: challengedId,
       status: "pending",
+      game: gameId,
       bonus_pool_cents: DEFAULT_BONUS_POOL_CENTS,
     })
     .select()

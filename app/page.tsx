@@ -14,7 +14,7 @@ export default function Lobby() {
   const [creating, setCreating] = useState(false);
 
   // The web challenge path — same room-creation code Slack hits. Slack is icing.
-  async function startChallenge() {
+  async function startChallenge(gameId: string) {
     if (creating) return;
     setCreating(true);
     try {
@@ -22,6 +22,7 @@ export default function Lobby() {
         method: "POST",
         body: JSON.stringify({
           challengerName: sessionStorage.getItem("rampage_name") ?? "challenger",
+          gameId,
         }),
       });
       const { room, error } = await res.json();
@@ -65,8 +66,8 @@ export default function Lobby() {
               key={g.id}
               game={g}
               index={i}
-              onLaunch={g.id === "receipt-blitz" ? startChallenge : undefined}
-              busy={creating && g.id === "receipt-blitz"}
+              onLaunch={g.live && !g.href ? () => startChallenge(g.id) : undefined}
+              busy={creating && g.live && !g.href}
             />
           ))}
         </div>

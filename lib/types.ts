@@ -4,7 +4,7 @@
 // change to "Rampage" here if we want the repo name in the UI.
 export const APP_NAME = "Perkade";
 
-export type GameId = "receipt-blitz" | "fraudle" | "split-or-steal";
+export type GameId = "receipt-blitz" | "fraudle" | "split-or-steal" | "flip";
 
 export interface GameMeta {
   id: GameId;
@@ -82,9 +82,19 @@ export type GameState = {
   winner?: string;
 };
 
+// --- Flip (fair coin, stake-weighted odds) ---
+export type FlipState = {
+  roomId: string;
+  roll?: number; // broadcast by the flipping client so all clients converge
+  winner?: string;
+};
+
+// Room-shell events (shared infra) + per-game moves as opaque payloads.
 export type GameEvent =
-  | { type: "start"; state: GameState }
-  | { type: "match"; attempt: MatchAttempt }
+  | { type: "stake"; by: string; amountCents: number }
+  | { type: "start"; gameId: GameId; state: unknown; stakes: Record<string, number> }
+  | { type: "move"; by: string; data: unknown }
+  | { type: "match"; attempt: MatchAttempt } // legacy receipt-blitz event, still ridden
   | { type: "finish"; winner: string; scores: Record<string, number> };
 
 export const TOTAL_ROUNDS = 1;
