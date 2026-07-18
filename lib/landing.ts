@@ -42,21 +42,23 @@ export const STEPS = [
   },
 ];
 
-// span/bg/fg mirror the original layout so the grid keeps its rhythm.
+// span/tone keep the grid rhythm. `href` = playable now; omit = coming soon.
 export const GAME_MODES = [
   {
     icon: "🎯",
     title: "CANDIDATE DUELS",
-    body: "Binary prediction-style coworker competitions. Which AI tops the leaderboard this week? Who pushes the most PRs?",
+    body: "Binary prediction-style coworker competitions. Which AI tops the public leaderboard this week?",
     span: 2,
     tone: "night" as const,
+    href: "/predict",
   },
   {
     icon: "🕹",
     title: "MINIGAMES",
-    body: "Game Pigeon-style quick matches — 8-ball, darts, word hunts. Low stakes, high drama.",
+    body: "Quick 1v1 matches — Receipt Blitz, Word Duel, The Price Is Ramp. Low stakes, high drama.",
     span: 1,
     tone: "acid" as const,
+    href: "/game/new",
   },
   {
     icon: "🤝",
@@ -64,6 +66,7 @@ export const GAME_MODES = [
     body: "The classic trust game, but the pot is Thursday's team lunch budget.",
     span: 1,
     tone: "white" as const,
+    href: "/game/split-or-steal",
   },
   {
     icon: "🎵",
@@ -78,6 +81,7 @@ export const GAME_MODES = [
     body: "Enter how much of your allowance you're willing to wager — odds adjust automatically.",
     span: 1,
     tone: "acid" as const,
+    href: "/game/new?game=flip",
   },
   {
     icon: "💣",
@@ -93,6 +97,7 @@ export const GAME_MODES = [
     body: "Settle on any measurable real-world result both parties agree on — verified through read-only data.",
     span: 1,
     tone: "night" as const,
+    href: "/predict",
   },
 ];
 
