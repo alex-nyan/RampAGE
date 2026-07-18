@@ -5,6 +5,7 @@ Project skills for the Rampage hackathon. **They work automatically** — anyone
 | Skill | Use it when |
 | --- | --- |
 | `rampage-conventions` | Starting any feature; unsure about a stack choice; writing player-facing copy. **Read-this-first.** |
+| `judging-criteria` | Prioritizing, cutting scope, weighing trade-offs, or prepping the demo — map every call to what scores. |
 | `ramp-integration` | Adding a spend-control feature, awarding bonus-pool credits, or wiring the real Ramp sandbox (via `lib/ramp.ts`). |
 | `slack-challenge` | Anything touching the `/rampage` Slack flow — `app/api/slack/*` or `lib/slack.ts`. |
 | `supabase-realtime` | Building the game room, live lobby/presence, or fixing multiplayer sync. |
