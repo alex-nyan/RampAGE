@@ -11,7 +11,8 @@ export type GameId =
   | "wordle-duel"
   | "flip"
   | "mines"
-  | "predict";
+  | "predict"
+  | "price-is-ramp";
 
 export interface GameMeta {
   id: GameId;
@@ -142,6 +143,24 @@ export type PredictBet = {
   amountCents: number;
   by: string; // display name
   at: number;
+};
+
+// --- The Price Is Ramp (guess-the-spend) ---
+// Both players eyeball a real-ish company expense and guess the total; closest
+// WITHOUT going over takes the round (Price-Is-Right rule). Best-of-N; the higher
+// round score takes the house pot. Positive-sum: it's a skill/vibes guess for a
+// slice of the bonus pool — nobody's own allowance is ever at stake.
+export type PriceItem = {
+  id: string;
+  merchant: string; // who it was billed to (card-descriptor flavored)
+  emoji: string;
+  blurb: string; // the expense line + context you're pricing
+  actualCents: number; // the real total — hidden until the reveal
+  zinger: string; // cheeky context shown on reveal
+};
+export type PriceState = {
+  roomId: string;
+  items: PriceItem[]; // the shared deck (creator seeds it, broadcast on start)
 };
 
 // Shared room events plus opaque per-game moves.
