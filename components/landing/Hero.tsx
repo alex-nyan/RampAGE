@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { NeoButton, NeoCard, Badge, Pill } from "@/components/ui";
 import { HERO_PILLS, MINE_TILES, LEADERS } from "@/lib/landing";
 
@@ -5,7 +6,7 @@ export function Hero() {
   return (
     <section
       id="product"
-      className="mx-auto grid max-w-[1440px] items-center gap-12 px-6 py-16 md:px-12 lg:grid-cols-[1.05fr_.95fr] lg:py-24"
+      className="mx-auto grid max-w-[1440px] items-center gap-12 px-6 py-12 md:px-12 lg:grid-cols-[1.05fr_.95fr] lg:gap-8 lg:py-8"
     >
       <div>
         <Badge className="mb-6">⚡ RAMP HACKATHON 2026</Badge>
@@ -36,15 +37,19 @@ export function Hero() {
       </div>
 
       {/* product stack — three scattered cards */}
-      <div className="relative flex flex-col items-stretch">
+      <div className="relative flex flex-col items-stretch lg:-my-8 lg:origin-center lg:scale-[.9]">
         <div className="pointer-events-none absolute -inset-x-16 -inset-y-10 bg-[radial-gradient(circle_at_60%_40%,rgba(255,255,255,.55),transparent_60%)]" />
 
         {/* slackbot setup card */}
         <NeoCard tilt={-2} className="relative z-[1] w-[min(400px,100%)] self-start bg-white p-5">
           <div className="mb-3 flex items-center gap-2.5">
-            <div className="grid h-[34px] w-[34px] place-items-center rounded-[9px] bg-night font-display text-[15px] text-acid">
-              R
-            </div>
+            <Image
+              src="/rampage-slack-bot.png"
+              alt="Rampage Slack bot"
+              width={34}
+              height={34}
+              className="h-[34px] w-[34px] rounded-[9px] border-2 border-night object-cover"
+            />
             <div>
               <div className="text-[14px] font-bold">
                 rampage{" "}
@@ -70,6 +75,15 @@ export function Hero() {
             ))}
           </div>
         </NeoCard>
+
+        <Image
+          src="/duel-cat.png"
+          alt=""
+          width={447}
+          height={558}
+          aria-hidden="true"
+          className="pointer-events-none absolute right-[100px] top-[45px] z-[4] h-auto w-[112px] rotate-[10deg] drop-shadow-[4px_5px_0_rgba(10,10,10,.2)] sm:right-[80px] sm:top-[45px] sm:w-[145px] lg:right-[55px]"
+        />
 
         {/* live duel card */}
         <NeoCard
