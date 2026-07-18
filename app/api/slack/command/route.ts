@@ -12,15 +12,33 @@ export async function POST(req: Request) {
   const form = new URLSearchParams(raw);
   const challengerId = form.get("user_id") ?? "unknown";
   const text = form.get("text") ?? ""; // "<@U123|sam> mines"
-  const mention = /<@([A-Z0-9]+)(?:\|([^>]+))?>/.exec(text);
-  const challengedId = mention?.[1] ?? null;
+  // Mentions arrive escaped (<@U123|sam>) when should_escape is true, or as
+  // plain "@sam" when false. Handle BOTH — don't relearn this live.
+  const escaped = /<@([A-Z0-9]+)(?:\|([^>]+))?>/.exec(text);
+  const plain = /@([\w.\-]+)/.exec(text);
+  const challengedId = escaped?.[1] ?? null;
+  const plainName = escaped?.[2] ?? plain?.[1] ?? null;
   // Optional game after the mention: "/rampage @sam flip"
-  const gameToken = text.replace(/<@[^>]+>/, "").trim().split(/\s+/)[0]?.toLowerCase();
-  const gameId = ["receipt-blitz", "flip"].includes(gameToken) ? gameToken : "receipt-blitz";
+  const gameToken =
+    text
+      .replace(/<@[^>]+>/g, "")
+      .replace(/@[\w.\-]+/g, "")
+      .trim()
+      .split(/\s+/)[0]?.toLowerCase() ?? "";
+  const gameId = ["receipt-blitz", "flip", "split-or-steal"].includes(gameToken)
+    ? gameToken
+    : "receipt-blitz";
+  const gameNames: Record<string, string> = {
+    "receipt-blitz": "Receipt Match Blitz",
+    flip: "Flip",
+    "split-or-steal": "Split or Steal",
+  };
 
   const [challenger, challenged] = await Promise.all([
     resolveUser(challengerId),
-    challengedId ? resolveUser(challengedId) : Promise.resolve({ name: "a mystery coworker" }),
+    challengedId
+      ? resolveUser(challengedId)
+      : Promise.resolve({ name: plainName ?? "a mystery coworker" }),
   ]);
 
   const { data: room } = await supabase
@@ -44,6 +62,7 @@ export async function POST(req: Request) {
       challengerName: challenger.name,
       challengedName: challenged.name,
       roomId: room?.id ?? "pending",
+      gameName: gameNames[gameId],
     }),
   });
 }

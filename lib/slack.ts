@@ -54,13 +54,14 @@ export function challengeBlocks(args: {
   challengerName: string;
   challengedName: string;
   roomId: string;
+  gameName?: string;
 }) {
   return [
     {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `⚔️ *${args.challengerName}* challenged *${args.challengedName}* to *Receipt Match Blitz* — winner grabs a slice of this week's bonus pool 🎁`,
+        text: `⚔️ *${args.challengerName}* challenged *${args.challengedName}* to *${args.gameName ?? "Receipt Match Blitz"}* — winner grabs a slice of this week's bonus pool 🎁`,
       },
     },
     {
