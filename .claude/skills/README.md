@@ -12,6 +12,7 @@ Project skills for the Rampage hackathon. **They work automatically** — anyone
 | `shared-ui-components` | Building ANY UI — reuse shared packages/components (shadcn, Tailwind, Framer Motion) before hand-rolling. |
 | `responsive-cross-device` | Building ANY screen — must work on both desktop and mobile (phones join via QR). |
 | `new-minigame` | Adding/changing the game loop, extending `lib/types.ts`, or the `game/[roomId]` UI. |
+| `tidy-docs` | Keeping the repo root clean — moving loose `.md` docs into `docs/` (leaves `CLAUDE.md`, root `README.md`, and skill files put). |
 
 Each skill is a distilled fast-path; the full source of truth is `CLAUDE.md` at the repo root.
 
