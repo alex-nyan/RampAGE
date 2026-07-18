@@ -120,9 +120,9 @@ export type MinesMove =
 
 // --- Predict (LIVE multi-person prediction market) ---
 // A shared, always-live board of hardcoded PUBLIC / EXTERNAL yes/no events.
-// Anyone can bet their bonus chips on either side; the pool + implied odds move
+// Anyone can place a house-backed wager on either side; the pool + implied odds move
 // live for every viewer via Supabase realtime (no 1v1 room, no QR). Positive-sum
-// — chips are house-granted bonus credit, never a personal allowance, and events
+// — balances are house-funded, never a personal allowance, and events
 // settle on public data, never on a coworker's output.
 export type PredictSide = "yes" | "no";
 

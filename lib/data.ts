@@ -46,7 +46,7 @@ export const GAMES: GameMeta[] = [
   {
     id: "predict",
     name: "Predict",
-    blurb: "Live market · bet chips on public events · the whole office plays",
+    blurb: "Live market · wager on public events · the whole office plays",
     badge: { label: "LIVE", tone: "green" },
     href: "/predict",
     live: true,
@@ -63,7 +63,7 @@ export const GAMES: GameMeta[] = [
 // Predict — the LIVE market board. Every event is opt-in and settles on a
 // PUBLIC / EXTERNAL outcome (markets, weather, public leaderboards, communal
 // stuff) — never on a coworker's work, output, or reactions. Pools are seeded
-// so the board is never empty; the whole office bets their bonus chips live.
+// so the board is never empty; the whole office places house-backed wagers live.
 export const PREDICT_EVENTS: PredictEvent[] = [
   {
     id: "hackathon_midnight",
@@ -73,15 +73,6 @@ export const PREDICT_EVENTS: PredictEvent[] = [
     closesLabel: "Closes 11:59pm",
     seedYesCents: 46000,
     seedNoCents: 14000,
-  },
-  {
-    id: "btc_friday",
-    question: "Will Bitcoin close above its Monday price this Friday?",
-    source: "Settles on the public BTC/USD Friday close — an external market.",
-    category: "Markets",
-    closesLabel: "Closes Fri 4pm ET",
-    seedYesCents: 52000,
-    seedNoCents: 33500,
   },
   {
     id: "llm_arena",

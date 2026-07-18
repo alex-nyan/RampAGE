@@ -95,7 +95,7 @@ export function DuelLobby() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(10,10,10,.5) 0%, rgba(10,10,10,.7) 33.333%, rgba(10,10,10,1) 100%)",
+              "linear-gradient(to bottom, rgba(10,10,10,.5) 100%, rgba(10,10,10,.7) 33.333%, rgba(10,10,10,1) 0%)",
           }}
         />
 
@@ -141,7 +141,7 @@ export function DuelLobby() {
             <div className="mb-3 font-display text-[10px] tracking-[1.5px] text-acid/65">
               OR LAUNCH A NEW GAME
             </div>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {GAMES.map((game) => (
                 <button
                   key={game.id}
@@ -155,6 +155,14 @@ export function DuelLobby() {
                   {creating === game.id ? "Opening…" : game.label}
                 </button>
               ))}
+              <button
+                type="button"
+                onClick={() => router.push("/predict")}
+                disabled={!!creating}
+                className="rounded-xl border-2 border-acid bg-night/85 px-2 py-3 font-display text-[10px] uppercase text-acid transition hover:bg-acid hover:text-night disabled:opacity-50"
+              >
+                📈 Prediction Market
+              </button>
             </div>
           </div>
 

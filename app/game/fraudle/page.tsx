@@ -58,7 +58,7 @@ export default function Fraudle() {
 
   return (
     <main className="flex min-h-screen justify-center bg-acid text-noir lg:items-start">
-      <div className="relative flex w-full max-w-[480px] flex-col gap-3.5 px-5 pb-8 pt-12 lg:my-10 lg:max-w-[600px] lg:gap-4 lg:rounded-2xl lg:border-[3px] lg:border-noir lg:bg-cream lg:px-9 lg:pb-9 lg:pt-10 lg:shadow-brut-lg">
+      <div className="relative flex w-full max-w-[680px] flex-col gap-3.5 px-5 pb-8 pt-12 lg:my-10 lg:gap-4 lg:rounded-2xl lg:border-[3px] lg:border-noir lg:bg-cream lg:px-9 lg:pb-9 lg:pt-10 lg:shadow-brut-lg">
         {/* top bar */}
         <div className="flex items-center justify-between">
           <Link

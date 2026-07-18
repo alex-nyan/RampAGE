@@ -6,7 +6,7 @@ export function Hero() {
   return (
     <section
       id="product"
-      className="mx-auto grid max-w-[1440px] items-center gap-12 px-6 py-12 md:px-12 lg:grid-cols-[1.05fr_.95fr] lg:gap-8 lg:py-8"
+      className="mx-auto grid max-w-[1440px] items-center gap-12 px-6 py-12 md:px-12 lg:grid-cols-[1.05fr_.95fr] lg:gap-8 lg:py-8 lg:min-h-[calc(100vh-88px)]"
     >
       <div className="relative flex flex-col justify-end self-stretch">
         <div>
@@ -124,7 +124,7 @@ export function Hero() {
         <NeoCard
           tilt={-1}
           shadow="#F2216E"
-          className="relative z-[1] -mt-6 ml-6 w-[min(360px,100%)] self-start bg-white p-5"
+          className="relative z-[1] -mt-[64px] ml-6 w-[min(360px,100%)] self-start bg-white p-5"
         >
           <div className="mb-2.5 font-display text-[13px]">🏆 OFFICE LEADERBOARD</div>
           {LEADERS.map((l) => (

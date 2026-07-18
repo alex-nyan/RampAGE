@@ -95,7 +95,7 @@ export default function SplitOrSteal() {
       className={`${bungee.variable} ${space.variable} flex min-h-screen justify-center overflow-hidden`}
       style={{ background: YELLOW, color: INK, fontFamily: "var(--font-space)" }}
     >
-      <div className="relative flex w-full max-w-[480px] flex-col gap-4 px-5 pb-8 pt-12">
+      <div className="relative flex w-full max-w-[680px] flex-col gap-4 px-5 pb-8 pt-12">
         {/* top bar */}
         <div className="flex items-center justify-between">
           <Link

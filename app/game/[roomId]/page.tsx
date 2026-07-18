@@ -195,7 +195,7 @@ export default function DuelRoom() {
           }}
         />
 
-        <div className="relative flex w-full max-w-[720px] flex-col gap-4">
+        <div className="relative flex w-[125%] max-w-[850px] flex-col gap-4 [zoom:.8]">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-acid/35 pb-3">
             <div>
               <div className="mb-1 font-mono text-[10px] uppercase tracking-[.16em] text-acid/55">
