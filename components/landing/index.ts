@@ -6,5 +6,5 @@ export { SlackPreview } from "./SlackPreview";
 export { HowItWorks } from "./HowItWorks";
 export { GameModes } from "./GameModes";
 export { Safety } from "./Safety";
-export { Integrations } from "./Integrations";
+export { Leaderboard } from "./Leaderboard";
 export { FooterCta } from "./FooterCta";
