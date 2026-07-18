@@ -10,7 +10,7 @@ Rampage: a competitive arena where coworkers play skill-based multiplayer miniga
 - **No coworker surveillance.** Don't build features that bet on individuals' PRs, Slack reactions, or output.
 - Cheeky in *tone*, defensible in *mechanics*.
 
-**The game we're shipping:** `<<< FILL IN: e.g. Receipt Match Blitz / Mines-on-bonus-pot / Split-or-Steal >>>`
+**The game we're shipping:** **Receipt Match Blitz** — head-to-head speed round: match receipts to their (obfuscated) card transactions faster than your opponent. Winner grabs the room's bonus-pool slice.
 (Everything else here is stack-agnostic to the chosen game.)
 
 ## Stack — do not deviate
