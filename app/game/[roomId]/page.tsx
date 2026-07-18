@@ -30,13 +30,14 @@ export default function DuelRoom() {
   const [myStake, setMyStake] = useState(DEFAULT_STAKE_CENTS / 100);
   const [phase, setPhase] = useState<"pending" | "active" | "finished">("pending");
   const [initialState, setInitialState] = useState<unknown>(null);
-  const [lastMove, setLastMove] = useState<{ by: string; data: unknown } | null>(null);
+  const [lastMove, setLastMove] = useState<{ by: string; data: unknown; seq: number } | null>(null);
   const [winner, setWinner] = useState<string | null>(null);
   const [awardMsg, setAwardMsg] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [roomUrl, setRoomUrl] = useState("");
   const channelRef = useRef<RealtimeChannel | null>(null);
   const stakesRef = useRef(stakes);
+  const moveSeqRef = useRef(0);
   stakesRef.current = stakes;
 
   useEffect(() => {
@@ -57,7 +58,10 @@ export default function DuelRoom() {
           setInitialState(e.state);
           setPhase("active");
         }
-        if (e.type === "move") setLastMove({ by: e.by, data: e.data });
+        if (e.type === "move") {
+          moveSeqRef.current += 1;
+          setLastMove({ by: e.by, data: e.data, seq: moveSeqRef.current });
+        }
         if (e.type === "finish") {
           setWinner(e.winner);
           setPhase("finished");
@@ -168,14 +172,12 @@ export default function DuelRoom() {
             ←
           </Link>
           <div className="flex gap-1.5">
-            {players.map((p, i) => (
+            {players.map((p) => (
               <span
                 key={p.name}
                 className="rounded-full border-2 border-night bg-acid px-2.5 py-1 font-mono text-[11px] font-bold"
               >
                 {p.name}
-                {gameId === "mines" && i === 0 ? " · place" : ""}
-                {gameId === "mines" && i === 1 ? " · check" : ""}
                 {stakes[p.name] ? ` · ${chips(stakes[p.name])}` : ""}
               </span>
             ))}

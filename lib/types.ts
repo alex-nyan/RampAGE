@@ -96,7 +96,7 @@ export type FlipState = {
 };
 
 // --- Mines (placer hides, checker clears) ---
-export type MinesPhase = "placing" | "probing" | "done";
+export type MinesPhase = "roles" | "placing" | "probing" | "done";
 
 export type MinesState = {
   roomId: string;
@@ -110,8 +110,11 @@ export type MinesState = {
 };
 
 export type MinesMove =
-  | { type: "place"; mines: number[]; placer?: string; checker?: string }
-  | { type: "probe"; index: number };
+  | { type: "claim"; role: "placer" | "checker" }
+  | { type: "place"; mines: number[] }
+  | { type: "probe"; index: number }
+  /** Full snapshot — preferred sync so late/missed events still converge. */
+  | { type: "sync"; state: MinesState };
 
 // Shared room events plus opaque per-game moves.
 export type GameEvent =

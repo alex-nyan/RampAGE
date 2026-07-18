@@ -9,7 +9,7 @@ export const SAFE_COUNT = CELL_COUNT - MINES; // 31
 export function initialMinesState(roomId: string): MinesState {
   return {
     roomId,
-    phase: "placing",
+    phase: "roles",
     placer: "",
     checker: "",
     mines: [],
@@ -72,22 +72,44 @@ export function revealCells(index: number, mines: number[], already: number[]): 
   return [...revealed];
 }
 
-export function applyPlace(
+/** Each player claims placer or checker. When both roles are filled by different people → placing. */
+export function applyClaim(
   state: MinesState,
-  mines: number[],
   by: string,
-  roles?: { placer?: string; checker?: string }
+  role: "placer" | "checker"
 ): MinesState {
-  if (state.phase !== "placing") return state;
-  const placer = roles?.placer || state.placer || by;
-  const checker = roles?.checker || state.checker;
-  // Accept place from the known placer, OR from whoever places first if roles aren't set yet.
-  if (state.placer && by !== state.placer && by !== placer) return state;
-  if (!isValidPlacement(mines)) return state;
+  if (state.phase !== "roles") return state;
+
+  let placer = state.placer;
+  let checker = state.checker;
+
+  // Drop this player from the other seat if they switch.
+  if (role === "placer") {
+    if (placer && placer !== by) return state; // seat taken
+    if (checker === by) checker = "";
+    placer = by;
+  } else {
+    if (checker && checker !== by) return state;
+    if (placer === by) placer = "";
+    checker = by;
+  }
+
+  const bothReady = Boolean(placer && checker && placer !== checker);
   return {
     ...state,
     placer,
     checker,
+    phase: bothReady ? "placing" : "roles",
+  };
+}
+
+export function applyPlace(state: MinesState, mines: number[], by: string): MinesState {
+  if (state.phase !== "placing") return state;
+  if (!state.placer || !state.checker || state.placer === state.checker) return state;
+  if (by !== state.placer) return state;
+  if (!isValidPlacement(mines)) return state;
+  return {
+    ...state,
     mines: [...mines].sort((a, b) => a - b),
     phase: "probing",
   };
@@ -95,35 +117,28 @@ export function applyPlace(
 
 export function applyProbe(state: MinesState, index: number, by: string): MinesState {
   if (state.phase !== "probing") return state;
-  // Only the checker may probe once roles are known; if checker unset, allow any non-placer.
-  if (state.checker) {
-    if (by !== state.checker) return state;
-  } else if (state.placer && by === state.placer) {
-    return state;
-  }
+  if (!state.checker || by !== state.checker) return state;
   if (!Number.isInteger(index) || index < 0 || index >= CELL_COUNT) return state;
   if (state.revealed.includes(index)) return state;
 
   if (state.mines.includes(index)) {
-    const winner = state.placer || "placer";
     return {
       ...state,
       revealed: [...state.revealed, index],
       hitMine: index,
       phase: "done",
-      winner,
+      winner: state.placer,
     };
   }
 
   const revealed = revealCells(index, state.mines, state.revealed);
   const safeRevealed = revealed.filter((i) => !state.mines.includes(i));
   if (safeRevealed.length >= SAFE_COUNT) {
-    const winner = state.checker || by;
     return {
       ...state,
       revealed: safeRevealed,
       phase: "done",
-      winner,
+      winner: state.checker,
     };
   }
   return { ...state, revealed: safeRevealed };

@@ -52,19 +52,22 @@ export function DuelLobby() {
           Start a duel
         </h1>
         <div className="mb-8 grid gap-3 sm:grid-cols-2">
-          {GAMES.map((g) => (
-            <button
-              key={g.id}
-              type="button"
-              onClick={() => createDuel(g.id)}
-              disabled={!!creating}
-              className={`rounded-2xl border-[3px] border-acid bg-night px-4 py-5 font-display text-[15px] uppercase text-acid shadow-[6px_6px_0_#e4f222] transition hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[8px_8px_0_#e4f222] disabled:opacity-50 ${
-                highlight === g.id ? "bg-acid text-night" : ""
-              }`}
-            >
-              {creating === g.id ? "Opening…" : g.label}
-            </button>
-          ))}
+          {GAMES.map((g) => {
+            const selected = highlight === g.id;
+            return (
+              <button
+                key={g.id}
+                type="button"
+                onClick={() => createDuel(g.id)}
+                disabled={!!creating}
+                className={`rounded-2xl border-[3px] border-acid px-4 py-5 font-display text-[15px] uppercase shadow-[6px_6px_0_#e4f222] transition hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[8px_8px_0_#e4f222] disabled:opacity-50 ${
+                  selected ? "bg-acid text-night" : "bg-night text-acid"
+                }`}
+              >
+                {creating === g.id ? "Opening…" : g.label}
+              </button>
+            );
+          })}
         </div>
         <form onSubmit={enterDuel}>
           <label htmlFor="duel-id" className="mb-3 block text-center font-mono text-[13px] uppercase text-acid/60">

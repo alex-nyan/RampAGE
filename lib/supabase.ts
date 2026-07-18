@@ -20,7 +20,10 @@ export function joinRoom(
   }
 ): RealtimeChannel {
   const channel = supabase.channel(`room:${roomId}`, {
-    config: { presence: { key: displayName } },
+    config: {
+      presence: { key: displayName },
+      broadcast: { self: false, ack: false },
+    },
   });
 
   channel
