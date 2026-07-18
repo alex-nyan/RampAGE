@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import PhoneShell from "@/components/PhoneShell";
 import { FRAUDLE_REWARD, FRAUDLE_TXNS } from "@/lib/data";
 import type { Txn } from "@/lib/types";
 
@@ -58,8 +57,8 @@ export default function Fraudle() {
   const reveal = status !== "playing";
 
   return (
-    <PhoneShell>
-      <div className="relative flex min-h-full flex-col gap-3.5 px-5 pb-6 pt-14">
+    <main className="flex min-h-screen justify-center bg-page">
+      <div className="relative flex w-full max-w-[430px] flex-col gap-3.5 bg-paper px-5 pb-6 pt-14">
         {/* top bar */}
         <div className="flex items-center justify-between">
           <Link
@@ -181,7 +180,7 @@ export default function Fraudle() {
           )}
         </AnimatePresence>
       </div>
-    </PhoneShell>
+    </main>
   );
 }
 

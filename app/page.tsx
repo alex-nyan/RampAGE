@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import PhoneShell from "@/components/PhoneShell";
 import { APP_NAME, type GameMeta } from "@/lib/types";
 import { GAMES, HOUSE_POT, YOU } from "@/lib/data";
 
@@ -10,8 +9,8 @@ const fmt = (n: number) => n.toLocaleString("en-US");
 
 export default function Lobby() {
   return (
-    <PhoneShell>
-      <div className="flex min-h-full flex-col gap-4 px-5 pb-7 pt-16">
+    <main className="flex min-h-screen justify-center bg-page">
+      <div className="flex w-full max-w-[430px] flex-col gap-4 bg-paper px-5 pb-7 pt-16">
         {/* header */}
         <div className="flex items-center justify-between">
           <div className="text-[19px] font-extrabold tracking-tight">
@@ -50,7 +49,7 @@ export default function Lobby() {
           <span className="font-semibold text-brand">+◆ {YOU.today} today</span>
         </div>
       </div>
-    </PhoneShell>
+    </main>
   );
 }
 
