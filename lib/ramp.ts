@@ -48,12 +48,27 @@ export async function getBudget(): Promise<Budget> {
   return realGetBudget();
 }
 
-// --- real implementations (wire to Ramp sandbox ONLY after mock path demos clean) ---
-async function realAwardBonusCredit(_: unknown): Promise<AwardResult> {
-  return { ok: false, error: "Ramp sandbox not wired yet — flip NEXT_PUBLIC_RAMP_MOCK back" };
+// --- real implementations ---
+// The client secret can't live in the browser, so real Ramp calls go through
+// server route handlers (app/api/ramp/*), which call lib/ramp.server.ts.
+// Same signatures as the mock — the caller never knows which is live.
+async function realAwardBonusCredit(args: {
+  roomId: string;
+  userName: string;
+  amountCents: number;
+  memo: string;
+}): Promise<AwardResult> {
+  const res = await fetch("/api/ramp/award", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(args),
+  });
+  if (!res.ok) return { ok: false, error: `award route ${res.status}` };
+  return res.json();
 }
 async function realGetBudget(): Promise<Budget> {
-  throw new Error("Ramp sandbox not wired yet");
+  const res = await fetch("/api/ramp/budget");
+  return res.json();
 }
 
 const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
