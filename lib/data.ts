@@ -9,8 +9,9 @@ export const GAMES: GameMeta[] = [
   {
     id: "receipt-blitz",
     name: "Receipt Blitz",
-    blurb: "Match receipts to transactions · 60s",
-    live: false,
+    blurb: "Match receipts to transactions · 1v1",
+    badge: { label: "CHALLENGE", tone: "amber" },
+    live: true, // no href — the lobby creates a room and routes both players in
   },
   {
     id: "fraudle",

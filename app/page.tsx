@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { APP_NAME, type GameMeta } from "@/lib/types";
 import { GAMES, HOUSE_POT, YOU } from "@/lib/data";
@@ -8,6 +10,29 @@ import { GAMES, HOUSE_POT, YOU } from "@/lib/data";
 const fmt = (n: number) => n.toLocaleString("en-US");
 
 export default function Lobby() {
+  const router = useRouter();
+  const [creating, setCreating] = useState(false);
+
+  // The web challenge path — same room-creation code Slack hits. Slack is icing.
+  async function startChallenge() {
+    if (creating) return;
+    setCreating(true);
+    try {
+      const res = await fetch("/api/rooms", {
+        method: "POST",
+        body: JSON.stringify({
+          challengerName: sessionStorage.getItem("rampage_name") ?? "challenger",
+        }),
+      });
+      const { room, error } = await res.json();
+      if (error || !room) throw new Error(error ?? "no room");
+      router.push(`/game/${room.id}`);
+    } catch {
+      alert("Couldn't create a room — is Supabase env set?");
+      setCreating(false);
+    }
+  }
+
   return (
     <main className="flex min-h-screen justify-center bg-page">
       <div className="flex w-full max-w-[430px] flex-col gap-4 bg-paper px-5 pb-7 pt-16">
@@ -36,7 +61,13 @@ export default function Lobby() {
         {/* games */}
         <div className="flex flex-1 flex-col gap-3">
           {GAMES.map((g, i) => (
-            <GameCard key={g.id} game={g} index={i} />
+            <GameCard
+              key={g.id}
+              game={g}
+              index={i}
+              onLaunch={g.id === "receipt-blitz" ? startChallenge : undefined}
+              busy={creating && g.id === "receipt-blitz"}
+            />
           ))}
         </div>
 
@@ -53,7 +84,17 @@ export default function Lobby() {
   );
 }
 
-function GameCard({ game, index }: { game: GameMeta; index: number }) {
+function GameCard({
+  game,
+  index,
+  onLaunch,
+  busy,
+}: {
+  game: GameMeta;
+  index: number;
+  onLaunch?: () => void;
+  busy?: boolean;
+}) {
   const inner = (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -86,7 +127,7 @@ function GameCard({ game, index }: { game: GameMeta; index: number }) {
             </span>
           )}
         </div>
-        <div className="text-[12px] text-ink/55">{game.blurb}</div>
+        <div className="text-[12px] text-ink/55">{busy ? "Opening room…" : game.blurb}</div>
       </div>
       <div className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-brand text-[13px] text-white transition-transform group-hover:translate-x-0.5">
         →
@@ -96,6 +137,13 @@ function GameCard({ game, index }: { game: GameMeta; index: number }) {
 
   if (game.live && game.href) {
     return <Link href={game.href}>{inner}</Link>;
+  }
+  if (game.live && onLaunch) {
+    return (
+      <button onClick={onLaunch} disabled={busy} className="text-left disabled:opacity-70">
+        {inner}
+      </button>
+    );
   }
   return <div title="Coming soon">{inner}</div>;
 }

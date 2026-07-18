@@ -1,9 +1,12 @@
 import { createClient, type RealtimeChannel } from "@supabase/supabase-js";
 import type { GameEvent, Player } from "./types";
 
+// Anon key is public by design (RLS is the boundary); defaults keep the demo
+// working even if env vars are missing. Env vars override.
 export const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL ?? "http://localhost:54321",
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "dev-anon-key"
+  process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://ifetanzpmmgyolhglcco.supabase.co",
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmZXRhbnpwbW1neW9saGdsY2NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzNzk5NjQsImV4cCI6MjA5OTk1NTk2NH0.COI_n_xTUWgiOvWbdu9k4Mfwnj7KQMQRC0T2cZajX18"
 );
 
 // One channel per room. Join on mount, clean up on unmount.
