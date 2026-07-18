@@ -8,7 +8,7 @@ export function Hero() {
       id="product"
       className="mx-auto grid max-w-[1440px] items-center gap-12 px-6 py-12 md:px-12 lg:grid-cols-[1.05fr_.95fr] lg:gap-8 lg:py-8"
     >
-      <div>
+      <div className="relative flex flex-col self-stretch">
         <Badge className="mb-6">⚡ RAMP HACKATHON 2026</Badge>
         <h1 className="mb-6 font-display text-[44px] uppercase leading-[1.02] md:text-[64px]">
           Corporate spend, but make it{" "}
@@ -29,7 +29,7 @@ export function Hero() {
             Watch Demo
           </NeoButton>
         </div>
-        <div className="flex flex-wrap gap-2.5">
+        <div className="mt-auto flex flex-wrap gap-2.5 pt-2">
           {HERO_PILLS.map((p) => (
             <Pill key={p}>{p}</Pill>
           ))}
@@ -37,7 +37,7 @@ export function Hero() {
       </div>
 
       {/* product stack — three scattered cards */}
-      <div className="relative flex flex-col items-stretch lg:-my-8 lg:origin-center lg:scale-[.9]">
+      <div className="relative flex translate-y-[20px] flex-col items-stretch lg:-my-8 lg:origin-center lg:scale-[.9]">
         <div className="pointer-events-none absolute -inset-x-16 -inset-y-10 bg-[radial-gradient(circle_at_60%_40%,rgba(255,255,255,.55),transparent_60%)]" />
 
         {/* slackbot setup card */}
@@ -61,8 +61,8 @@ export function Hero() {
           <div className="mb-2.5 font-display text-[13px]">⚔ DUEL PROPOSED</div>
           <div className="grid gap-1.5 text-[13px]">
             {[
-              ["Challenge", "Most PRs merged this week"],
-              ["Stake", "Friday intern dinner · $480"],
+              ["Challenge", "Mines Sweep"],
+              ["Stake", "Hawaii GTM Offsite Hotel · $480"],
               ["Odds", "0.5× / 1.5×"],
             ].map(([k, v]) => (
               <div
@@ -110,10 +110,10 @@ export function Hero() {
           </div>
           <div className="flex justify-between text-[12px]">
             <span>
-              <b className="text-acid">@nyan</b> placing mines
+              <b className="text-acid">@xikron</b> placing mines
             </span>
             <span>
-              <b className="text-amber">@dev</b> revealing · 7 safe
+              <b className="text-amber">@carrie</b> revealing · 7 safe
             </span>
           </div>
         </NeoCard>

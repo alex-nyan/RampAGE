@@ -106,7 +106,7 @@ export default function FlipGame({ me, stakes, lastEvent, send, onFinish }: Game
         whileTap={spinning ? undefined : { scale: 0.97 }}
         className="w-full rounded-xl border-[3px] border-noir bg-noir px-8 py-4 font-display text-[16px] uppercase text-acid shadow-brut transition hover:bg-hot hover:text-white disabled:opacity-50 disabled:hover:bg-noir disabled:hover:text-acid"
       >
-        {spinning ? "Flipping…" : `Flip for ◆${(pot / 100).toFixed(0)}`}
+        {spinning ? "Flipping…" : `Flip for $${(pot / 100).toFixed(2)}`}
       </motion.button>
 
       <p className="font-mono text-[11px] font-bold text-acid-deep">

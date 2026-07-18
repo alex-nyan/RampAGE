@@ -48,7 +48,7 @@ export function SlackPreview() {
               <span className="text-[11px] text-white/45">11:37 AM</span>
               <div className="mt-2 rounded-xl border-2 border-acid bg-night p-4">
                 <div className="mb-2.5 font-display text-[12px] text-acid">
-                  ⚔ PREDICTION DUEL · MAYA vs NYAN
+                  ⚔ PREDICTION DUEL · CARRIE vs NYAN
                 </div>
                 <div className="mb-3 grid grid-cols-2 gap-2 text-[12.5px]">
                   {[

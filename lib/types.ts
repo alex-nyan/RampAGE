@@ -119,8 +119,14 @@ export type MinesMove =
 
 // Shared room events plus opaque per-game moves.
 export type GameEvent =
-  | { type: "stake"; by: string; amountCents: number }
-  | { type: "start"; gameId: GameId; state: unknown; stakes: Record<string, number> }
+  | { type: "stake"; by: string; label?: string; amountCents: number }
+  | {
+      type: "start";
+      gameId: GameId;
+      state: unknown;
+      stakes: Record<string, number>;
+      stakeLabels?: Record<string, string>;
+    }
   | { type: "move"; by: string; data: unknown }
   | { type: "match"; attempt: MatchAttempt }
   | { type: "finish"; winner: string; scores: Record<string, number> };

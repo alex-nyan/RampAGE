@@ -1,7 +1,7 @@
 // Stake + auto-odds helpers — shared by ALL games. Never redeclare per game.
 // Positive-sum frame: stakes are bonus-pool credits; the pot is house-backed.
 
-export const DEFAULT_STAKE_CENTS = 1000; // ◆10 / $10 slice
+export const DEFAULT_STAKE_CENTS = 1000; // $10 default value until the player enters the real wager
 
 export type PayoutMode = "chance" | "skill";
 
@@ -60,11 +60,13 @@ export function oddsLabel(
     const pot = potCents(stakes);
     if (!pot) return "";
     const p = winProbability(mine, pot);
-    return `stake ◆${(mine / 100).toFixed(0)} → ${(p * 100).toFixed(0)}% shot at ◆${(pot / 100).toFixed(0)}`;
+    return `stake $${(mine / 100).toFixed(2)} → ${(p * 100).toFixed(0)}% shot at $${(pot / 100).toFixed(2)}`;
   }
   const matched = matchedPotCents(stakes);
   const pot = potCents(stakes);
   const excess = Math.max(0, pot - matched);
-  const base = `stake ◆${(mine / 100).toFixed(0)} → win ◆${(matched / 100).toFixed(0)}`;
-  return excess > 0 ? `${base} (matched; ◆${(excess / 100).toFixed(0)} excess sits out)` : base;
+  const base = `stake $${(mine / 100).toFixed(2)} → win $${(matched / 100).toFixed(2)}`;
+  return excess > 0
+    ? `${base} (matched; $${(excess / 100).toFixed(2)} excess sits out)`
+    : base;
 }

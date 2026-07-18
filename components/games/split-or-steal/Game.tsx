@@ -74,7 +74,7 @@ export default function SplitOrStealGame({ me, stakes, lastEvent, send, onFinish
         className="w-full rounded-2xl border-4 p-4 font-mono text-[13px] font-bold"
         style={{ background: YELLOW, borderColor: INK, color: INK }}
       >
-        POT ◆{(pot / 100).toFixed(0)} — split it 50/50, steal it all, or both steal and the
+        POT ${(pot / 100).toFixed(2)} — split it 50/50, steal it all, or both steal and the
         house keeps it. Company-funded; nobody&apos;s allowance moves.
       </div>
 
