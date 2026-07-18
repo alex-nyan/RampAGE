@@ -8,6 +8,7 @@ Project skills for the Rampage hackathon. **They work automatically** — anyone
 | `ramp-integration` | Adding a spend-control feature, awarding bonus-pool credits, or wiring the real Ramp sandbox (via `lib/ramp.ts`). |
 | `slack-challenge` | Anything touching the `/rampage` Slack flow — `app/api/slack/*` or `lib/slack.ts`. |
 | `supabase-realtime` | Building the game room, live lobby/presence, or fixing multiplayer sync. |
+| `shared-ui-components` | Building ANY UI — reuse shared packages/components (shadcn, Tailwind, Framer Motion) before hand-rolling. |
 | `new-minigame` | Adding/changing the game loop, extending `lib/types.ts`, or the `game/[roomId]` UI. |
 
 Each skill is a distilled fast-path; the full source of truth is `CLAUDE.md` at the repo root.
