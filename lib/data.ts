@@ -24,9 +24,10 @@ export const GAMES: GameMeta[] = [
   {
     id: "split-or-steal",
     name: "Split or Steal",
-    blurb: "Vs. the room · coffee's on the loser's card",
-    badge: { label: "LIVE 7:30", tone: "amber" },
-    live: false,
+    blurb: "Trust game · split the bonus lunch pot or gamble for it all",
+    badge: { label: "CHALLENGE", tone: "amber" },
+    href: "/game/split-or-steal",
+    live: true,
   },
 ];
 
