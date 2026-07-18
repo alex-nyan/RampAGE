@@ -1,10 +1,16 @@
 // Single source of truth for shared shapes + brand. Never redeclare these.
 
-// One-line brand flip. The imported design is branded "Perkade";
-// change to "Rampage" here if we want the repo name in the UI.
-export const APP_NAME = "Perkade";
+// One-line brand flip. The site-wide neubrutalist landing is branded "Rampage".
+export const APP_NAME = "Rampage";
 
-export type GameId = "receipt-blitz" | "fraudle" | "split-or-steal" | "flip";
+// Every playable/registered game id. New game = add its id here + a registry entry.
+export type GameId =
+  | "receipt-blitz"
+  | "fraudle"
+  | "split-or-steal"
+  | "flip"
+  | "mines"
+  | "predict";
 
 export interface GameMeta {
   id: GameId;
@@ -85,16 +91,16 @@ export type GameState = {
 // --- Flip (fair coin, stake-weighted odds) ---
 export type FlipState = {
   roomId: string;
-  roll?: number; // broadcast by the flipping client so all clients converge
+  roll?: number;
   winner?: string;
 };
 
-// Room-shell events (shared infra) + per-game moves as opaque payloads.
+// Shared room events plus opaque per-game moves.
 export type GameEvent =
   | { type: "stake"; by: string; amountCents: number }
   | { type: "start"; gameId: GameId; state: unknown; stakes: Record<string, number> }
   | { type: "move"; by: string; data: unknown }
-  | { type: "match"; attempt: MatchAttempt } // legacy receipt-blitz event, still ridden
+  | { type: "match"; attempt: MatchAttempt }
   | { type: "finish"; winner: string; scores: Record<string, number> };
 
 export const TOTAL_ROUNDS = 1;
