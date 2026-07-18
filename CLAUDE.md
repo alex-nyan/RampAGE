@@ -11,7 +11,9 @@ Rampage: a competitive arena where coworkers play **1v1 minigames** to wager cla
 - **No coworker surveillance.** Don't build features that settle on individuals' PRs, Slack reactions, or private output. Binary markets must resolve on opt-in / public / external questions — never "who got more reactions today."
 - Cheeky in *tone*, defensible in *mechanics*.
 
-**Ship a modular multi-game shell first**, then plug games in. The demo can highlight 1–2 games; the infra must make adding the next one cheap.
+**The games we're shipping now:** **Fraudle** (live — daily single-player: spot the policy-violating transaction) and **Receipt Blitz** (head-to-head via challenge flow + `game/[roomId]`). See `lib/data.ts` for the lobby lineup.
+
+**Also ship a modular multi-game shell** so adding the next 1v1 wagered game is cheap. Infra first; demo can highlight 1–2 games.
 
 ## Modular games — set this up early
 Treat rooms, presence, wagering, and payout as shared infrastructure. Each game is a small plug-in, not a new app.
@@ -33,9 +35,11 @@ components/games/<gameId>/
 ```
 Register it in the game registry; wire `game/[roomId]` to render `registry[room.gameId].Component`. Do not fork the room page per game.
 
-**Example games we may ship (pick for demo; keep others 1 PR away):**
+**Games in / near the lineup:**
 | gameId | Loop | Roles / notes |
 |--------|------|----------------|
+| `fraudle` | Daily spot-the-fraud | Live single-player (lobby). Not a 1v1 wager room. |
+| `receipt-blitz` | Receipt Match Blitz | Head-to-head multiplayer via `game/[roomId]` + challenge flow. |
 | `mines` | Grid / minefield | One player is **placer**, the other is **checker**. Placer hides mines; checker probes cells. Stakes settle on hit/clear. Spatial → canvas/`react-konva` OK. |
 | `predict` | Binary prediction market | Two friends open a yes/no market on an opt-in question (e.g. *"which AI tops the public leaderboard this week?"*). Each side stakes; odds from stake imbalance. Resolve when the outcome is known (manual resolve OK for demo). **Not** PR/Slack-reaction surveillance. |
 | `flip` | Fair coin / side pick | Both enter how much they're willing to wager; **odds auto-adjust** from the two stakes so EV is balanced. Simplest wager demo — ship this if time is tight. |
