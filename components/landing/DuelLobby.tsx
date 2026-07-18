@@ -157,6 +157,27 @@ export function DuelLobby() {
             </div>
           </div>
 
+          {/* Live prediction market — a different mode, right next to the duels */}
+          <Link
+            href="/predict"
+            className="mt-4 flex items-center gap-3 rounded-xl border-[3px] border-hot bg-night px-4 py-3 text-left transition hover:-translate-y-0.5 hover:shadow-[4px_4px_0_#f2216e]"
+          >
+            <span className="text-[26px]">📈</span>
+            <span className="min-w-0 flex-1">
+              <span className="flex items-center gap-2 font-display text-[12px] uppercase text-acid">
+                Live Prediction Market
+                <span className="flex items-center gap-1 rounded-full bg-hot px-1.5 py-0.5 text-[8px] text-white">
+                  <span className="h-1 w-1 animate-pulse rounded-full bg-white" />
+                  LIVE
+                </span>
+              </span>
+              <span className="mt-0.5 block text-[10.5px] font-medium leading-snug text-[#b8c41e]">
+                No 1v1 — the whole office bets chips on public events
+              </span>
+            </span>
+            <span className="font-display text-[18px] text-hot">▸</span>
+          </Link>
+
           <div
             aria-live="polite"
             className={`mt-3 min-h-[15px] font-display text-[10.5px] ${status?.error ? "text-hot" : "text-acid"}`}
