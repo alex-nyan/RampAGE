@@ -60,7 +60,18 @@ export default function GameRoom() {
   const [game, setGame] = useState<GameState | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
   const [awardMsg, setAwardMsg] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [roomUrl, setRoomUrl] = useState("");
   const channelRef = useRef<RealtimeChannel | null>(null);
+
+  useEffect(() => setRoomUrl(window.location.href), []);
+
+  function copyLink() {
+    navigator.clipboard?.writeText(roomUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  }
 
   useEffect(() => setName(sessionStorage.getItem("rampage_name")), []);
 
@@ -200,6 +211,30 @@ export default function GameRoom() {
               <br />
               Match receipts to card transactions faster than they do.
             </p>
+
+            {players.length < 2 && roomUrl && (
+              <div className="flex w-full flex-col items-center gap-2.5 rounded-2xl border border-line bg-card p-4">
+                <span className="text-[10px] font-semibold tracking-[0.08em] text-ink/45">
+                  INVITE YOUR OPPONENT
+                </span>
+                {/* QR is decorative sugar — the copy button is the guaranteed path */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(roomUrl)}`}
+                  alt="Scan to join"
+                  width={140}
+                  height={140}
+                  className="rounded-lg border border-line"
+                  onError={(e) => ((e.target as HTMLImageElement).style.display = "none")}
+                />
+                <button
+                  onClick={copyLink}
+                  className="w-full rounded-xl border border-line bg-page px-3 py-2.5 font-mono text-[11px] text-ink/70 transition-colors hover:border-brand"
+                >
+                  {copied ? "✓ Copied — paste it to them" : `${roomUrl.slice(0, 38)}… (tap to copy)`}
+                </button>
+              </div>
+            )}
             <button
               onClick={start}
               className="rounded-xl bg-brand px-6 py-3 text-[15px] font-bold text-white transition-colors hover:bg-brand-dark"
