@@ -19,7 +19,10 @@ import { TICKER_TWO } from "@/lib/landing";
 import type { Player, PredictBet, PredictSide } from "@/lib/types";
 
 const MARKET_ROOM = "predict-market-live";
-const REQUIRED_ORG_ID = process.env.NEXT_PUBLIC_RAMP_ORG_ID?.trim() || "RAMP-DEMO-2026";
+// Normalize so the org id matches regardless of case/whitespace — the input renders
+// uppercase via CSS, so a typed "ramp-demo-2026" LOOKS right but must still validate.
+const normOrg = (s: string) => s.trim().toUpperCase();
+const REQUIRED_ORG_ID = normOrg(process.env.NEXT_PUBLIC_RAMP_ORG_ID || "RAMP-DEMO-2026");
 const START_BALANCE_CENTS = 50000;
 const WAGER_AMOUNTS = [10, 25, 50];
 const money = (c: number) =>
@@ -41,7 +44,7 @@ export default function PredictMarket() {
   const [orgDraft, setOrgDraft] = useState("");
   const [orgError, setOrgError] = useState(false);
   const channelRef = useRef<RealtimeChannel | null>(null);
-  const orgConnected = Boolean(orgId && (!REQUIRED_ORG_ID || orgId === REQUIRED_ORG_ID));
+  const orgConnected = Boolean(orgId && (!REQUIRED_ORG_ID || normOrg(orgId) === REQUIRED_ORG_ID));
 
   useEffect(() => {
     const savedName = sessionStorage.getItem("rampage_name");
@@ -135,7 +138,7 @@ export default function PredictMarket() {
 
   function connectOrg(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const nextOrgId = orgDraft.trim();
+    const nextOrgId = normOrg(orgDraft);
     if (!nextOrgId || (REQUIRED_ORG_ID && nextOrgId !== REQUIRED_ORG_ID)) {
       setOrgError(true);
       return;
@@ -217,7 +220,7 @@ export default function PredictMarket() {
               <input
                 value={orgDraft}
                 onChange={(event) => {
-                  setOrgDraft(event.target.value);
+                  setOrgDraft(event.target.value.toUpperCase());
                   setOrgError(false);
                 }}
                 placeholder="ENTER ORG ID"
