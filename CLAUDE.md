@@ -3,15 +3,44 @@
 > Read this before doing anything. This is a **4-hour hackathon**. Optimize for a working, good-looking demo — not for correctness, tests, or architecture. When a choice is between "clever" and "shippable in 15 min," pick shippable.
 
 ## What we're building
-Rampage: a competitive arena where coworkers play skill-based multiplayer minigames to win **house-sponsored bonus perk credits**, wrapped in Ramp's spend controls (budget, merchant limits, approvals, receipts).
+Rampage: a competitive arena where coworkers play **1v1 minigames** to wager claims on **house-sponsored bonus perk credits**, wrapped in Ramp's spend controls (budget, merchant limits, approvals, receipts).
 
 **Product frame — enforce this in all copy and logic:**
-- **Positive-sum only.** Players compete for a *bonus pool* the company adds. A player's own baseline allowance is NEVER lost to a coworker. Never generate "you took their lunch money" mechanics or copy.
-- **No coworker surveillance.** Don't build features that bet on individuals' PRs, Slack reactions, or output.
+- **Positive-sum only.** Players stake slices of a *bonus pool* the company adds (or house-matched stakes). A player's own baseline allowance is NEVER lost to a coworker. Never generate "you took their lunch money" mechanics or copy.
+- **Wagers = bonus-pool claims, not salary raids.** Each player enters how much bonus credit they're willing to put on the line for *this* match. Winner takes the match pot. Baseline perk allowance stays untouched.
+- **No coworker surveillance.** Don't build features that settle on individuals' PRs, Slack reactions, or private output. Binary markets must resolve on opt-in / public / external questions — never "who got more reactions today."
 - Cheeky in *tone*, defensible in *mechanics*.
 
-**The game we're shipping:** `<<< FILL IN: e.g. Receipt Match Blitz / Mines-on-bonus-pot / Split-or-Steal >>>`
-(Everything else here is stack-agnostic to the chosen game.)
+**Ship a modular multi-game shell first**, then plug games in. The demo can highlight 1–2 games; the infra must make adding the next one cheap.
+
+## Modular games — set this up early
+Treat rooms, presence, wagering, and payout as shared infrastructure. Each game is a small plug-in, not a new app.
+
+**Shared boilerplate (build once):**
+1. **Room + challenge flow** — create room, two players join (`roomId` + display name), presence, start/ready.
+2. **Wager layer** — both players enter a stake amount (bonus-pool credits). Persist stakes on the room. On resolve → award via `lib/ramp.ts`.
+3. **Odds helper** — when stakes are asymmetric, auto-adjust payout odds so the match is fair (e.g. Alice stakes $20, Bob stakes $10 → Alice wins smaller multiple, Bob wins larger). One shared util; every game reuses it.
+4. **Game registry** — a single map of `gameId → { name, description, Component, initialState }`. Lobby / Slack `/rampage @teammate <gameId>` pick from this list.
+5. **Shared types in `lib/types.ts`** — `Room`, `Wager`, `GameId`, plus per-game state under a discriminated union. Never redeclare game state elsewhere.
+
+**Per-game module (copy this shape for each new game):**
+```
+lib/games/<gameId>/
+  rules.ts          # pure logic: apply move, check win, no React
+  types.ts          # ONLY if needed — prefer extending lib/types.ts
+components/games/<gameId>/
+  Game.tsx          # the UI mounted by game/[roomId]
+```
+Register it in the game registry; wire `game/[roomId]` to render `registry[room.gameId].Component`. Do not fork the room page per game.
+
+**Example games we may ship (pick for demo; keep others 1 PR away):**
+| gameId | Loop | Roles / notes |
+|--------|------|----------------|
+| `mines` | Grid / minefield | One player is **placer**, the other is **checker**. Placer hides mines; checker probes cells. Stakes settle on hit/clear. Spatial → canvas/`react-konva` OK. |
+| `predict` | Binary prediction market | Two friends open a yes/no market on an opt-in question (e.g. *"which AI tops the public leaderboard this week?"*). Each side stakes; odds from stake imbalance. Resolve when the outcome is known (manual resolve OK for demo). **Not** PR/Slack-reaction surveillance. |
+| `flip` | Fair coin / side pick | Both enter how much they're willing to wager; **odds auto-adjust** from the two stakes so EV is balanced. Simplest wager demo — ship this if time is tight. |
+
+Add a game = new folder + registry entry + types discriminant. Do **not** rebuild lobby, Slack, Realtime, or Ramp payout.
 
 ## Stack — do not deviate
 - **Next.js (App Router) + TypeScript** — one repo, one deployable app. UI + backend (route handlers) live together. This is a monorepo-of-one; do NOT split front/back into separate packages or repos.
@@ -24,9 +53,10 @@ Rampage: a competitive arena where coworkers play skill-based multiplayer miniga
 1. **Deploy early, deploy often.** The skeleton must be live on Vercel before features. If it's not deploying, that's the top priority — fix it before anything else.
 2. **Everyone commits to `main`.** Tiny commits, pull often. No PRs, no long-lived branches, no branch protection.
 3. **Vertical slices.** Own a whole feature end-to-end (UI → API route → table), not "all the frontend." Don't block teammates on a layer.
-4. **Shared types live in `lib/types.ts` only.** Game state shape is defined once. Never redeclare it.
-5. **Seed fake data on load.** No empty states in the demo, ever. Don't manually set up state live on stage.
-6. **Never put an external API on the demo's critical path unguarded.** Wrap it, mock it, feature-flag it.
+4. **Shared types live in `lib/types.ts` only.** Room / wager / game-state union defined once. Never redeclare it.
+5. **Games plug into the registry.** New game = `lib/games/<id>` + `components/games/<id>` + registry entry. Do not fork `game/[roomId]` or duplicate wager/Realtime/Ramp code per game.
+6. **Seed fake data on load.** No empty states in the demo, ever. Don't manually set up state live on stage.
+7. **Never put an external API on the demo's critical path unguarded.** Wrap it, mock it, feature-flag it.
 
 ## Identity (no real auth)
 Players join a room via `roomId` + a display name they type. Store in Supabase / Realtime presence. Do NOT build sign-up, email, or OAuth flows — they will eat the afternoon and add nothing to the demo.
@@ -82,20 +112,26 @@ If real Ramp sandbox access exists: implement behind the same interface, keep th
 ## Structure
 ```
 app/
-  page.tsx                 # lobby / landing (QR lands here)
-  game/[roomId]/page.tsx   # the game room
+  page.tsx                 # lobby / landing (QR lands here) — pick game + stake
+  game/[roomId]/page.tsx   # shared room shell (presence, wager, mounts game)
   api/                     # route handlers = backend
     slack/
-      command/route.ts     # slash command: /rampage @teammate
+      command/route.ts     # slash command: /rampage @teammate [gameId]
       interactivity/route.ts # accept/decline button clicks
-components/ui/             # shadcn
+components/
+  ui/                      # shadcn
+  games/<gameId>/Game.tsx  # one component per game
 lib/
   supabase.ts              # client + realtime helpers
   ramp.ts                  # the ONE swappable Ramp module
   slack.ts                 # the ONE swappable Slack module (mock by default)
-  types.ts                 # shared game-state types (single source of truth)
+  types.ts                 # Room, Wager, GameId, game-state union (single source of truth)
+  wager.ts                 # stake + auto-odds helpers (shared by all games)
+  games/
+    registry.ts            # gameId → metadata + Component + initialState
+    <gameId>/rules.ts      # pure game logic
 supabase/
-  schema.sql               # tables
+  schema.sql               # tables (rooms include game_id + stakes)
   seed.sql                 # demo data
 ```
 
