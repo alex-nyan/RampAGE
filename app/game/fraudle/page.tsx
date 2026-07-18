@@ -57,43 +57,44 @@ export default function Fraudle() {
   const reveal = status !== "playing";
 
   return (
-    <main className="flex min-h-screen justify-center bg-page">
-      <div className="relative flex w-full max-w-[430px] flex-col gap-3.5 bg-paper px-5 pb-6 pt-14">
+    <main className="flex min-h-screen justify-center bg-acid text-noir lg:items-start">
+      <div className="relative flex w-full max-w-[480px] flex-col gap-3.5 px-5 pb-8 pt-12 lg:my-10 lg:max-w-[600px] lg:gap-4 lg:rounded-2xl lg:border-[3px] lg:border-noir lg:bg-cream lg:px-9 lg:pb-9 lg:pt-10 lg:shadow-brut-lg">
         {/* top bar */}
         <div className="flex items-center justify-between">
           <Link
             href="/"
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-line bg-card text-ink/60 transition-colors hover:border-brand hover:text-brand"
             aria-label="Back to lobby"
+            className="grid h-10 w-10 place-items-center rounded-xl border-[3px] border-noir bg-white text-lg font-bold shadow-brut transition-transform hover:-translate-y-0.5"
           >
             ←
           </Link>
-          <div className="font-mono text-[11px] text-ink/45">#214 · Jul 18</div>
+          <span className="rounded-full border-[2.5px] border-noir bg-noir px-3 py-1 font-mono text-[11px] font-bold text-acid">
+            #214 · JUL 18
+          </span>
         </div>
 
-        <div className="flex items-baseline justify-between">
-          <h1 className="text-[22px] font-extrabold tracking-tight">Fraudle</h1>
+        {/* title */}
+        <div>
+          <h1 className="font-display text-[38px] uppercase leading-[0.95]">
+            Frau<span className="text-hot">dle</span>
+          </h1>
+          <p className="mt-2 max-w-[360px] text-[13.5px] font-medium leading-snug">
+            One of these 9 transactions violates policy. Sniff out the fraud in
+            3 guesses.
+          </p>
         </div>
-        <p className="text-[13px] leading-relaxed text-ink/60">
-          One of these 9 transactions violates policy. Find it in 3 guesses.
-        </p>
 
         {/* grid */}
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-2.5 lg:gap-3.5">
           {deck.map((t) => {
             const isElim = eliminated.includes(t.id);
             const isSel = selected === t.id;
             const isFraudReveal = reveal && t.fraud;
 
-            let cls =
-              "border-line bg-card"; // default
-            if (isFraudReveal)
-              cls =
-                "border-gold-mid bg-gold-wash shadow-[0_2px_10px_rgba(201,138,46,0.25)]";
-            else if (isElim) cls = "border-line bg-page opacity-55";
-            else if (isSel)
-              cls =
-                "border-gold-mid bg-gold-wash shadow-[0_2px_10px_rgba(201,138,46,0.25)]";
+            let cls = "bg-white shadow-brut"; // default
+            if (isFraudReveal) cls = "bg-hot text-white shadow-brut";
+            else if (isElim) cls = "bg-cream opacity-60";
+            else if (isSel) cls = "bg-sun -translate-y-0.5 shadow-brut-md";
 
             return (
               <motion.button
@@ -106,23 +107,27 @@ export default function Fraudle() {
                 }
                 transition={{ duration: 0.4 }}
                 whileTap={!isElim && !reveal ? { scale: 0.96 } : undefined}
-                className={`flex flex-col gap-0.5 rounded-[10px] border-2 p-2.5 text-left ${cls}`}
+                className={`flex flex-col gap-0.5 rounded-2xl border-[3px] border-noir p-2.5 text-left transition lg:p-4 ${cls}`}
               >
                 <span
-                  className={`font-mono text-[12px] font-semibold ${
-                    isElim ? "text-ink/50 line-through" : ""
-                  } ${isFraudReveal || isSel ? "text-gold-ink" : ""}`}
+                  className={`font-mono text-[13px] font-bold ${
+                    isElim ? "line-through opacity-60" : ""
+                  }`}
                 >
                   ${t.amount.toFixed(2)}
                 </span>
                 <span
-                  className={`text-[10px] ${
-                    isFraudReveal || isSel ? "text-gold-ink" : "text-ink/50"
+                  className={`text-[10px] font-semibold ${
+                    isFraudReveal ? "" : isElim ? "opacity-60" : "text-noir/70"
                   }`}
                 >
                   {t.label}
                 </span>
-                <span className="text-[9px] font-semibold text-ink/35">
+                <span
+                  className={`font-display text-[8.5px] uppercase ${
+                    isFraudReveal ? "" : isSel ? "text-noir" : "text-noir/45"
+                  }`}
+                >
                   {isFraudReveal
                     ? "⚠ FRAUD"
                     : isElim
@@ -137,20 +142,20 @@ export default function Fraudle() {
         </div>
 
         {/* guess dots */}
-        <div className="mt-auto flex items-center justify-center gap-2">
+        <div className="mt-auto flex items-center justify-center gap-2 pt-1">
           {[1, 2, 3].map((n) => (
             <span
               key={n}
-              className={`h-3 w-3 rounded-full ${
+              className={`h-3.5 w-3.5 rounded-full border-[2.5px] border-noir ${
                 n < guess
-                  ? "bg-ink/30"
+                  ? "bg-noir"
                   : n === guess && !reveal
-                    ? "blink bg-gold-mid"
-                    : "border-2 border-line"
+                    ? "blink bg-sun"
+                    : "bg-white"
               }`}
             />
           ))}
-          <span className="ml-1.5 text-[11px] text-ink/50">
+          <span className="ml-1.5 font-display text-[10px] uppercase text-acid-deep">
             {reveal ? "Round over" : `Guess ${guess} of 3`}
           </span>
         </div>
@@ -160,11 +165,11 @@ export default function Fraudle() {
           type="button"
           onClick={lockIn}
           disabled={!selected || reveal}
-          className="rounded-xl bg-ink py-[15px] text-center text-[15px] font-bold text-white transition-colors enabled:hover:bg-ink-4 disabled:opacity-40"
+          className="rounded-xl border-[3px] border-noir bg-noir py-4 text-center font-display text-[15px] uppercase text-acid shadow-brut transition enabled:hover:-translate-y-0.5 enabled:hover:bg-hot enabled:hover:text-white disabled:opacity-40"
         >
           Lock it in
         </button>
-        <p className="text-center text-[10px] text-ink/40">
+        <p className="text-center text-[11px] font-medium text-acid-deep">
           Solve in 1 = ◆ 100 · in 2 = ◆ 60 · in 3 = ◆ 30 (house pot)
         </p>
 
@@ -200,49 +205,55 @@ function ResultOverlay({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="absolute inset-0 z-30 flex items-center justify-center bg-ink/45 px-5 backdrop-blur-sm"
+      className="absolute inset-0 z-30 flex items-center justify-center bg-noir/50 px-5 backdrop-blur-sm"
     >
       <motion.div
-        initial={{ opacity: 0, y: 16, scale: 0.96 }}
+        initial={{ opacity: 0, y: 24, scale: 0.94 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ type: "spring", stiffness: 320, damping: 26 }}
-        className="flex w-full flex-col gap-4 rounded-2xl border border-line bg-paper p-6"
+        className="flex w-full max-w-[400px] flex-col gap-4 rounded-2xl border-[3px] border-noir bg-white p-6 shadow-brut-lg"
       >
-        <div className="flex flex-col items-center gap-1 text-center">
-          <div className="text-[26px] font-extrabold tracking-tight">
+        <div
+          className={`rounded-xl border-[3px] border-noir px-4 py-3 text-center ${
+            won ? "bg-sun text-noir" : "bg-hot text-white"
+          }`}
+        >
+          <div className="font-display text-[24px] uppercase leading-tight">
             {won ? "Caught it! ✓" : "Out of guesses"}
-          </div>
-          <div className="text-[13px] text-ink/50">
-            {won
-              ? `Nailed the violation in ${chips === 100 ? "one" : chips === 60 ? "two" : "three"}.`
-              : "The fraud slipped through this round."}
           </div>
         </div>
 
-        <div className="rounded-xl border border-line bg-card p-4 text-center">
-          <div className="text-[11px] font-semibold text-ink/45">
-            {fraud.label} · ${fraud.amount.toFixed(2)}
+        <p className="text-center text-[13px] font-medium leading-snug">
+          {won
+            ? `Nailed the violation in ${chips === 100 ? "one" : chips === 60 ? "two" : "three"}.`
+            : "The fraud slipped through this round."}
+        </p>
+
+        <div className="rounded-xl border-[3px] border-noir bg-cream p-4 text-center">
+          <div className="font-display text-[11px] uppercase text-noir">
+            {fraud.label} ·{" "}
+            <span className="font-mono">${fraud.amount.toFixed(2)}</span>
           </div>
-          <p className="mt-1.5 text-[12px] leading-relaxed text-ink/65">
+          <p className="mt-1.5 text-[12px] font-medium leading-relaxed text-noir/75">
             {fraud.reason}
           </p>
         </div>
 
-        <div className="flex items-center justify-between rounded-xl border border-dashed border-line px-4 py-3">
-          <span className="text-[13px] font-semibold text-gold-ink">
+        <div className="flex items-center justify-between rounded-xl border-[2.5px] border-dashed border-noir px-4 py-3">
+          <span className="font-display text-[12px] uppercase text-acid-deep">
             Chips from house pot
           </span>
           <motion.span
             initial={{ scale: 0.7 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.15, type: "spring", stiffness: 300 }}
-            className="font-mono text-[20px] font-semibold text-gold-mid"
+            className="font-mono text-[22px] font-bold text-acid-deep"
           >
             +◆ {chips}
           </motion.span>
         </div>
 
-        <p className="text-center text-[11px] leading-relaxed text-ink/45">
+        <p className="text-center text-[11px] font-medium leading-relaxed text-noir/60">
           Chips are house-sponsored bonus credit.
           <br />
           Nobody&apos;s lunch money was harmed.
@@ -252,13 +263,13 @@ function ResultOverlay({
           <button
             type="button"
             onClick={onReplay}
-            className="rounded-xl bg-brand py-[15px] text-center text-[15px] font-bold text-white transition-colors hover:bg-brand-dark"
+            className="rounded-xl border-[3px] border-noir bg-noir py-4 text-center font-display text-[15px] uppercase text-acid shadow-brut transition hover:-translate-y-0.5 hover:bg-hot hover:text-white"
           >
             Play again
           </button>
           <Link
             href="/"
-            className="rounded-xl border border-line bg-card py-[15px] text-center text-[15px] font-semibold text-ink/70 transition-colors hover:bg-page"
+            className="rounded-xl border-[3px] border-noir bg-white py-3.5 text-center font-display text-[13px] uppercase text-noir transition hover:bg-sun"
           >
             Back to lobby
           </Link>
