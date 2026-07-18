@@ -41,6 +41,23 @@ export async function postChallenge(args: {
   return { ok: (await res.json()).ok };
 }
 
+// Post a game result back into the channel the challenge came from.
+export async function postResult(args: { channelId: string; text: string }): Promise<{ ok: boolean }> {
+  if (SLACK_MOCK) {
+    console.log("[slack mock] result posted:", args);
+    return { ok: true };
+  }
+  const res = await fetch("https://slack.com/api/chat.postMessage", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ channel: args.channelId, text: args.text }),
+  });
+  return { ok: (await res.json()).ok };
+}
+
 export async function resolveUser(userId: string): Promise<{ name: string }> {
   if (SLACK_MOCK) return { name: `player_${userId.slice(-4)}` };
   const res = await fetch(`https://slack.com/api/users.info?user=${userId}`, {

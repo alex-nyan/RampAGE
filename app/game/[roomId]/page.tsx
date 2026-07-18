@@ -101,6 +101,13 @@ export default function DuelRoom() {
       awardBonusCredit({ roomId, userName: name, amountCents: myCut, memo: `${getGame(gameId).name} payout` }).then(
         (r) => r.ok && setAwardMsg(`+${chips(myCut)} house bonus credited`)
       );
+    // Post the result back to the Slack channel the challenge came from
+    // (no-op for web-created rooms). Only the winner's client fires it.
+    if (w === name || (payouts && Object.keys(payouts)[0] === name))
+      fetch(`/api/rooms/${roomId}/finish`, {
+        method: "POST",
+        body: JSON.stringify({ winner: w, potCents: pot, gameName: getGame(gameId).name }),
+      }).catch(() => {});
   }
 
   function copyLink() {
@@ -271,6 +278,8 @@ export default function DuelRoom() {
               )}
               <p className="text-[11px] text-night/50">
                 Paid from the house bonus pot — nobody&apos;s allowance was touched.
+                <br />
+                Redeemable on food orders (DoorDash, UberEats) via a Ramp merchant-locked card 🍜
               </p>
               <Link href="/" className="font-mono text-[13px] font-bold text-hot underline">
                 Back to the arena →

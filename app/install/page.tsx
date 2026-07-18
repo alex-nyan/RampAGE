@@ -2,8 +2,14 @@ import Image from "next/image";
 import { Section, NeoButton, NeoCard } from "@/components/ui";
 
 // Static "download / install the Slack bot" page. The landing's "Install in
-// Slack" CTAs point here. Swap SLACK_INSTALL_URL for your real OAuth link.
-const SLACK_INSTALL_URL = "https://slack.com/oauth/v2/authorize";
+// Slack" CTAs point here. Slack's OAuth URL 401s without a client_id, so we
+// only render the real link when NEXT_PUBLIC_SLACK_CLIENT_ID is set (from
+// api.slack.com → your app → Basic Information). Fallback: deep-link the
+// already-installed workspace app so the demo button always does something.
+const CLIENT_ID = process.env.NEXT_PUBLIC_SLACK_CLIENT_ID;
+const SLACK_INSTALL_URL = CLIENT_ID
+  ? `https://slack.com/oauth/v2/authorize?client_id=${CLIENT_ID}&scope=commands,chat:write,users:read`
+  : "slack://open"; // opens the Slack app — demo workspace already has Rampage installed
 
 const STEPS = [
   ["Add Rampage to Slack", "One click installs the bot into your workspace."],

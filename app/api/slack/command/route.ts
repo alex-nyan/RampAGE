@@ -11,7 +11,26 @@ export async function POST(req: Request) {
 
   const form = new URLSearchParams(raw);
   const challengerId = form.get("user_id") ?? "unknown";
-  const text = form.get("text") ?? ""; // "<@U123|sam> mines"
+  const channelId = form.get("channel_id");
+  const text = form.get("text") ?? ""; // "<@U123|sam> flip"
+
+  // `/rampage leaderboard` — chips won from the awards ledger, top 5.
+  if (text.trim().toLowerCase().startsWith("leaderboard")) {
+    const { data: rows } = await supabase.from("awards").select("user_name, amount_cents");
+    const totals = new Map<string, number>();
+    for (const r of rows ?? [])
+      totals.set(r.user_name, (totals.get(r.user_name) ?? 0) + r.amount_cents);
+    const lines = [...totals.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([n, c], i) => `${["🥇", "🥈", "🥉", "4.", "5."][i]} *${n}* — ◆${(c / 100).toFixed(0)} bonus chips won`);
+    return NextResponse.json({
+      response_type: "in_channel",
+      text: lines.length
+        ? `🏟 *Rampage leaderboard*\n${lines.join("\n")}\n_All chips are house-sponsored bonus credit — redeemable on food orders via Ramp._`
+        : "No duels settled yet — `/rampage @teammate` to start one ⚔️",
+    });
+  }
   // Mentions arrive escaped (<@U123|sam>) when should_escape is true, or as
   // plain "@sam" when false. Handle BOTH — don't relearn this live.
   const escaped = /<@([A-Z0-9]+)(?:\|([^>]+))?>/.exec(text);
@@ -51,6 +70,7 @@ export async function POST(req: Request) {
       challenged_slack_id: challengedId,
       status: "pending",
       game: gameId,
+      slack_channel_id: channelId,
       bonus_pool_cents: DEFAULT_BONUS_POOL_CENTS,
     })
     .select()
