@@ -133,9 +133,12 @@ export function Hero() {
               className="flex items-center gap-2.5 border-t-2 border-black/10 py-1.5 text-[13px]"
             >
               <span className="w-[22px] font-display text-[12px]">{l.rank}</span>
-              <span
-                className="h-[26px] w-[26px] rounded-full border-2 border-night"
-                style={{ background: l.color }}
+              <Image
+                src={l.avatar}
+                alt={`${l.name} profile`}
+                width={26}
+                height={26}
+                className="h-[26px] w-[26px] flex-none rounded-full border-2 border-night object-cover"
               />
               <b>{l.name}</b>
               <span className="ml-auto font-bold text-acid-ink">{l.won}</span>

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Section, NeoCard } from "@/components/ui";
 import { LEADERBOARD_ROWS, LEADERBOARD_STATS } from "@/lib/landing";
 
@@ -9,7 +10,7 @@ export function Leaderboard() {
       <div className="mb-9 flex flex-wrap items-baseline gap-4">
         <h2 className="font-display text-[32px] uppercase md:text-[38px]">Office Leaderboard</h2>
         <span className="text-[15px] font-medium text-white/50">
-          This week&apos;s bonus-pool champions. Winners redeem via Ramp.
+          This week&apos;s highest-rated duelists.
         </span>
       </div>
 
@@ -35,9 +36,12 @@ export function Leaderboard() {
             <span className="grid w-[34px] shrink-0 place-items-center font-display text-[18px]">
               {medal[i] ?? l.rank}
             </span>
-            <span
-              className="h-[32px] w-[32px] shrink-0 rounded-full border-2 border-night"
-              style={{ background: l.color }}
+            <Image
+              src={l.avatar}
+              alt={`${l.name} profile`}
+              width={32}
+              height={32}
+              className="h-[32px] w-[32px] shrink-0 rounded-full border-2 border-night object-cover"
             />
             <div className="min-w-0">
               <b className="block truncate text-[15px]">
@@ -48,17 +52,13 @@ export function Leaderboard() {
             </div>
             <div className="ml-auto shrink-0 text-right">
               <div className="font-display text-[18px] leading-none">
-                {l.chips.toLocaleString()} <span className="text-[12px]">chips</span>
+                {l.elo.toLocaleString()} <span className="text-[12px]">ELO</span>
               </div>
               <div className="text-[11.5px] text-black/50">🎁 {l.prize}</div>
             </div>
           </div>
         ))}
       </NeoCard>
-
-      <p className="mt-5 text-[13px] text-white/45">
-        Chips are house-sponsored bonus credit — nobody&apos;s baseline allowance is ever at stake.
-      </p>
     </Section>
   );
 }

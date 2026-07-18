@@ -19,9 +19,10 @@ export const MINE_TILES = MINE_CODES.map((v) =>
 );
 
 export const LEADERS = [
-  { rank: "01", name: "@xikron", won: "3.5x dinners won", color: "#E4F222" },
-  { rank: "02", name: "@maya", won: "2 offsites won", color: "#FDB515" },
-  { rank: "03", name: "@nyan", won: "1 karaoke night", color: "#F2216E" },
+  { rank: "01", name: "@xikron", won: "1,940 ELO", avatar: "/carrie.jpg" },
+  { rank: "02", name: "@ishani", won: "1,410 ELO", avatar: "/ishani.jpeg" },
+  { rank: "03", name: "@nyan", won: "1,180 ELO", avatar: "/nyan.jpeg" },
+  { rank: "04", name: "@you", won: "850 ELO", avatar: "/gordon.jpeg" },
 ];
 
 export const STEPS = [
@@ -110,21 +111,19 @@ export const CONTROLS = [
   { title: "Read-only integrations", body: "GitHub and Slack data is observed, never modified." },
 ];
 
-// Full-section office leaderboard. `you` highlights the viewer's row. Prizes are
-// house-sponsored bonus-pool credit, redeemable via Ramp.
+// Full-section office leaderboard. `you` highlights the viewer's row.
 export const LEADERBOARD_ROWS = [
-  { rank: 1, name: "@xikron", chips: 1940, prize: "3.5 team dinners", streak: "🔥 7-win streak", color: "#E4F222" },
-  { rank: 2, name: "@maya", chips: 1410, prize: "2 offsite passes", streak: "won last 3", color: "#FDB515" },
-  { rank: 3, name: "@rachel_o", chips: 1180, prize: "1 karaoke night", streak: "clutch closer", color: "#F2216E" },
-  { rank: 4, name: "@you", chips: 850, prize: "coffee runs", streak: "climbing ↑", color: "#fff", you: true },
-  { rank: 5, name: "@sam_dev", chips: 790, prize: "lunch credit", streak: "rookie season", color: "#E4F222" },
+  { rank: 1, name: "@xikron", elo: 1940, prize: "3.5 team dinners", streak: "🔥 7-win streak", avatar: "/carrie.jpg" },
+  { rank: 2, name: "@ishani", elo: 1410, prize: "2 offsite passes", streak: "won last 3", avatar: "/ishani.jpeg" },
+  { rank: 3, name: "@nyan", elo: 1180, prize: "1 karaoke night", streak: "clutch closer", avatar: "/nyan.jpeg" },
+  { rank: 4, name: "@you", elo: 850, prize: "coffee runs", streak: "climbing ↑", avatar: "/gordon.jpeg", you: true },
 ];
 
 // Headline stats above the board.
 export const LEADERBOARD_STATS = [
   { label: "Bonus pool this week", value: "$4,200" },
   { label: "Duels settled", value: "312" },
-  { label: "Chips in play", value: "6,170" },
+  { label: "ELO in play", value: "5,380" },
 ];
 
 export const TICKER_ONE = Array(4)
