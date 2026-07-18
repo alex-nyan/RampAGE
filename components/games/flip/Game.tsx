@@ -42,43 +42,76 @@ export default function FlipGame({ me, stakes, lastEvent, send, onFinish }: Game
   }
 
   return (
-    <div className="flex flex-col items-center gap-5 py-10 text-center">
-      <div className="flex w-full flex-col gap-2 rounded-2xl border border-line bg-card p-4">
-        <span className="text-[10px] font-semibold tracking-[0.08em] text-ink/45">AUTO-ADJUSTED ODDS</span>
-        {Object.entries(stakes).map(([n, s]) => (
-          <div key={n} className="flex items-center gap-2">
-            <span className="w-20 truncate text-left text-[12px] font-semibold">{n}</span>
-            <div className="h-2 flex-1 overflow-hidden rounded-full bg-page">
-              <div
-                className="h-full rounded-full bg-brand"
-                style={{ width: `${winProbability(s, pot) * 100}%` }}
-              />
+    <div className="flex flex-col items-center gap-5 py-8 text-center">
+      {/* auto-adjusted odds card */}
+      <div className="flex w-full flex-col gap-3 rounded-2xl border-[3px] border-noir bg-white p-4 shadow-brut-md">
+        <div className="flex items-center justify-between">
+          <span className="font-display text-[11px] uppercase text-noir">
+            Auto-Adjusted Odds
+          </span>
+          <span className="rounded-full border-[2px] border-noir bg-acid px-2 py-0.5 font-display text-[9px] uppercase text-noir">
+            EV Fair
+          </span>
+        </div>
+        {Object.entries(stakes).map(([n, s]) => {
+          const mine = n === me;
+          return (
+            <div key={n} className="flex items-center gap-2.5">
+              <span className="w-20 truncate text-left font-display text-[11px] uppercase text-noir">
+                {mine ? "You" : n}
+              </span>
+              <div className="h-3 flex-1 overflow-hidden rounded-full border-[2px] border-noir bg-cream">
+                <div
+                  className={`h-full ${mine ? "bg-hot" : "bg-sun"}`}
+                  style={{ width: `${winProbability(s, pot) * 100}%` }}
+                />
+              </div>
+              <span className="w-10 text-right font-mono text-[12px] font-bold text-noir">
+                {(winProbability(s, pot) * 100).toFixed(0)}%
+              </span>
             </div>
-            <span className="font-mono text-[11px] text-ink/55">
-              {(winProbability(s, pot) * 100).toFixed(0)}%
-            </span>
-          </div>
-        ))}
-        <p className="text-[10px] text-ink/45">
-          Bigger stake → better odds, same expected value. Nobody&apos;s EV is negative.
+          );
+        })}
+        <p className="text-left text-[11px] font-medium leading-snug text-acid-deep">
+          Bigger stake &rarr; better odds, same expected value. Nobody&apos;s EV is negative.
         </p>
       </div>
 
-      <motion.div
-        animate={spinning ? { rotateX: 1440 } : { rotateX: 0 }}
-        transition={{ duration: 1.3, ease: "easeOut" }}
-        className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-gold-deep bg-gold-wash text-4xl"
-      >
-        ◆
-      </motion.div>
+      {/* positive-sum reassurance */}
+      <div className="flex w-full items-start gap-2 rounded-xl border-[2.5px] border-noir bg-white px-3.5 py-2.5 text-left text-[11.5px] font-medium leading-snug text-noir">
+        <span>🛡</span>
+        <span>
+          Your own allowance is <b>never</b> at stake. You&apos;re flipping for a slice
+          of the house-funded bonus pot — nobody&apos;s lunch money moves.
+        </span>
+      </div>
 
-      <button
+      {/* the coin */}
+      <div className="grid h-32 w-full place-items-center">
+        <motion.div
+          animate={spinning ? { rotateX: 1440, scale: [1, 1.06, 1] } : { rotateX: 0, scale: 1 }}
+          transition={{ duration: 1.3, ease: "easeOut" }}
+          className="grid h-28 w-28 place-items-center rounded-full border-[4px] border-noir bg-sun font-display text-5xl text-noir shadow-brut-lg"
+        >
+          🪙
+        </motion.div>
+      </div>
+
+      {/* flip button */}
+      <motion.button
+        type="button"
         onClick={flip}
         disabled={spinning}
-        className="rounded-xl bg-brand px-8 py-3 text-[15px] font-bold text-white transition-colors hover:bg-brand-dark disabled:opacity-50"
+        whileHover={spinning ? undefined : { y: -2 }}
+        whileTap={spinning ? undefined : { scale: 0.97 }}
+        className="w-full rounded-xl border-[3px] border-noir bg-noir px-8 py-4 font-display text-[16px] uppercase text-acid shadow-brut transition hover:bg-hot hover:text-white disabled:opacity-50 disabled:hover:bg-noir disabled:hover:text-acid"
       >
-        {spinning ? "Flipping…" : `Flip for ◆${(pot / 100).toFixed(0)} 🪙`}
-      </button>
+        {spinning ? "Flipping…" : `Flip for ◆${(pot / 100).toFixed(0)}`}
+      </motion.button>
+
+      <p className="font-mono text-[11px] font-bold text-acid-deep">
+        Your odds this flip: {(myP * 100).toFixed(0)}%
+      </p>
     </div>
   );
 }

@@ -82,8 +82,10 @@ export default function ReceiptBlitzGame({ me, state, lastEvent, send, onFinish 
 
   return (
     <div className="grid grid-cols-2 gap-3">
-      <section className="flex flex-col gap-1.5">
-        <h2 className="text-[10px] font-semibold tracking-[0.08em] text-ink/45">RECEIPTS</h2>
+      <section className="flex min-w-0 flex-col gap-2">
+        <h2 className="font-display text-[10px] uppercase tracking-wide text-noir">
+          🧾 Receipts
+        </h2>
         {game.receipts.map((r) => {
           const owner = game.matched[r.id];
           return (
@@ -91,37 +93,46 @@ export default function ReceiptBlitzGame({ me, state, lastEvent, send, onFinish 
               key={r.id}
               disabled={!!owner}
               onClick={() => setPicked(r.id)}
-              className={`rounded-xl border p-2.5 text-left text-[12px] font-semibold transition-colors ${
+              className={`rounded-xl border-[3px] border-noir p-2.5 text-left text-[12px] font-semibold transition ${
                 owner
-                  ? "border-brand-soft bg-brand-soft/60 text-ink/40"
+                  ? "bg-cream text-noir/50 shadow-none"
                   : picked === r.id
-                    ? "border-gold-deep bg-gold-wash"
-                    : "border-line bg-card hover:border-brand"
+                    ? "bg-sun text-noir shadow-brut hover:-translate-y-0.5"
+                    : "bg-white text-noir shadow-brut hover:-translate-y-0.5 hover:bg-acid"
               }`}
             >
-              {r.emoji} {r.merchant}
-              <span className="block font-mono text-[11px] font-normal text-ink/55">
-                {usd(r.amountCents)} {owner && <span className="text-brand">✓ {owner}</span>}
+              <span className="block truncate">
+                {r.emoji} {r.merchant}
+              </span>
+              <span className="block font-mono text-[11px] font-normal text-noir/60">
+                {usd(r.amountCents)}{" "}
+                {owner && (
+                  <span className="font-display text-[9px] uppercase text-acid-deep">
+                    ✓ {owner}
+                  </span>
+                )}
               </span>
             </button>
           );
         })}
       </section>
-      <section className="flex flex-col gap-1.5">
-        <h2 className="text-[10px] font-semibold tracking-[0.08em] text-ink/45">TRANSACTIONS</h2>
+      <section className="flex min-w-0 flex-col gap-2">
+        <h2 className="font-display text-[10px] uppercase tracking-wide text-noir">
+          💳 Transactions
+        </h2>
         {game.txns.map((t) => (
           <button
             key={t.id}
             disabled={!!game.matched[t.id] || !picked}
             onClick={() => tryMatch(t.id)}
-            className={`rounded-xl border p-2.5 text-left font-mono text-[11px] transition-colors ${
+            className={`rounded-xl border-[3px] border-noir p-2.5 text-left font-mono text-[11px] transition ${
               game.matched[t.id]
-                ? "border-brand-soft bg-brand-soft/60 text-ink/40"
-                : "border-line bg-card enabled:hover:border-gold-deep disabled:opacity-60"
+                ? "bg-cream text-noir/50 shadow-none"
+                : "bg-white text-noir shadow-brut enabled:hover:-translate-y-0.5 enabled:hover:bg-hot enabled:hover:text-white disabled:opacity-50"
             }`}
           >
-            {t.merchant}
-            <span className="block text-ink/55">
+            <span className="block truncate">{t.merchant}</span>
+            <span className="block text-noir/60">
               {usd(t.amountCents)} · {t.date}
             </span>
           </button>

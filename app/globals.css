@@ -42,6 +42,18 @@
   --color-gold-mid: #c98a2e;
   --color-gold-soft: #fdf1dc;
   --color-gold-wash: #fdf6e8;
+
+  /* game-side token aliases — reskinned flip/receipt-blitz/fraudle use the
+     older palette names; map them onto the current tokens so they render. */
+  --color-noir: #0a0a0a; /* = night */
+  --color-acid-deep: #5b6000; /* = acid-ink */
+  --color-sun: #fdb515; /* = amber */
+  --color-smoke: #1a1a1a; /* = slate */
+
+  /* hard offset shadows — the neo-brutalist signature used by the games */
+  --shadow-brut: 4px 4px 0 #0a0a0a;
+  --shadow-brut-md: 6px 6px 0 #0a0a0a;
+  --shadow-brut-lg: 8px 8px 0 #0a0a0a;
 }
 
 html,
