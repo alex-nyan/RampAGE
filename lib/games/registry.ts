@@ -1,14 +1,17 @@
 // The ONE game registry. Add a game = component + entry here. Do NOT fork game/[roomId].
 import type { ComponentType } from "react";
-import type { GameId } from "@/lib/types";
+import type { GameId, Player } from "@/lib/types";
 import ReceiptBlitzGame, { initialReceiptBlitzState } from "@/components/games/receipt-blitz/Game";
 import FlipGame, { initialFlipState } from "@/components/games/flip/Game";
 import SplitOrStealGame, { initialSplitState } from "@/components/games/split-or-steal/Game";
+import MinesGame from "@/components/games/mines/Game";
+import { initialMinesState } from "@/lib/games/mines/rules";
 
 // Props every game component receives from the room shell.
 export type GameProps = {
   roomId: string;
   me: string;
+  players: Player[]; // presence, sorted by joinedAt — mines uses [0]=placer [1]=checker
   stakes: Record<string, number>;
   state: unknown; // initial state broadcast with the start event
   lastEvent: { by: string; data: unknown } | null; // last "move" from the other client
@@ -25,7 +28,7 @@ export type GameModule = {
   initialState: (roomId: string) => unknown;
 };
 
-export const REGISTRY: Partial<Record<GameId | "flip", GameModule>> = {
+export const REGISTRY: Partial<Record<GameId, GameModule>> = {
   "receipt-blitz": {
     id: "receipt-blitz",
     name: "Receipt Blitz",
@@ -46,6 +49,13 @@ export const REGISTRY: Partial<Record<GameId | "flip", GameModule>> = {
     description: "Trust game — both split the pot, or gamble on stealing it all.",
     Component: SplitOrStealGame,
     initialState: initialSplitState,
+  },
+  mines: {
+    id: "mines",
+    name: "Mines Duel",
+    description: "One places 5 mines on a 6×6 — the other clears every safe cell.",
+    Component: MinesGame,
+    initialState: initialMinesState,
   },
 };
 

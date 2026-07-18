@@ -22,6 +22,13 @@ export const GAMES: GameMeta[] = [
     live: true,
   },
   {
+    id: "mines",
+    name: "Mines Duel",
+    blurb: "Placer hides 5 mines · checker clears the 6×6",
+    badge: { label: "CHALLENGE", tone: "amber" },
+    live: true,
+  },
+  {
     id: "flip",
     name: "Flip",
     blurb: "Stake-weighted coin · odds auto-adjust · 10s",

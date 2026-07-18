@@ -95,6 +95,24 @@ export type FlipState = {
   winner?: string;
 };
 
+// --- Mines (placer hides, checker clears) ---
+export type MinesPhase = "placing" | "probing" | "done";
+
+export type MinesState = {
+  roomId: string;
+  phase: MinesPhase;
+  placer: string;
+  checker: string;
+  mines: number[]; // length 5 after place; cell indices 0..35
+  revealed: number[];
+  hitMine?: number; // index that blew up, if any
+  winner?: string;
+};
+
+export type MinesMove =
+  | { type: "place"; mines: number[]; placer?: string; checker?: string }
+  | { type: "probe"; index: number };
+
 // Shared room events plus opaque per-game moves.
 export type GameEvent =
   | { type: "stake"; by: string; amountCents: number }

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Section, NeoCard } from "@/components/ui";
 import { GAME_MODES } from "@/lib/landing";
 
@@ -18,19 +19,31 @@ export function GameModes() {
         </span>
       </div>
       <div className="grid gap-[18px] sm:grid-cols-2 lg:grid-cols-4">
-        {GAME_MODES.map((g) => (
-          <NeoCard
-            key={g.title}
-            shadowSize={6}
-            className={`${toneClass[g.tone]} flex flex-col gap-2.5 p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5 ${
-              g.span === 2 ? "sm:col-span-2" : ""
-            }`}
-          >
-            <div className="text-[30px]">{g.icon}</div>
-            <div className="font-display text-[15px] leading-tight">{g.title}</div>
-            <p className="text-[13px] leading-relaxed opacity-85">{g.body}</p>
-          </NeoCard>
-        ))}
+        {GAME_MODES.map((g) => {
+          const card = (
+            <NeoCard
+              shadowSize={6}
+              className={`${toneClass[g.tone]} flex h-full flex-col gap-2.5 p-5 transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5`}
+            >
+              <div className="text-[30px]">{g.icon}</div>
+              <div className="font-display text-[15px] leading-tight">{g.title}</div>
+              <p className="text-[13px] leading-relaxed opacity-85">{g.body}</p>
+            </NeoCard>
+          );
+          const span = g.span === 2 ? "sm:col-span-2" : "";
+          if ("href" in g && g.href) {
+            return (
+              <Link key={g.title} href={g.href} className={span}>
+                {card}
+              </Link>
+            );
+          }
+          return (
+            <div key={g.title} className={span}>
+              {card}
+            </div>
+          );
+        })}
       </div>
     </Section>
   );

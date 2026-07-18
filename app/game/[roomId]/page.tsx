@@ -161,12 +161,14 @@ export default function DuelRoom() {
             ←
           </Link>
           <div className="flex gap-1.5">
-            {players.map((p) => (
+            {players.map((p, i) => (
               <span
                 key={p.name}
                 className="rounded-full border-2 border-night bg-acid px-2.5 py-1 font-mono text-[11px] font-bold"
               >
                 {p.name}
+                {gameId === "mines" && i === 0 ? " · place" : ""}
+                {gameId === "mines" && i === 1 ? " · check" : ""}
                 {stakes[p.name] ? ` · ${chips(stakes[p.name])}` : ""}
               </span>
             ))}
@@ -240,6 +242,7 @@ export default function DuelRoom() {
           <mod.Component
             roomId={roomId}
             me={name}
+            players={players}
             stakes={stakes}
             state={initialState}
             lastEvent={lastMove}

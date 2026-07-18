@@ -21,7 +21,7 @@ export function Hero() {
           approvals, receipts, and controls intact.
         </p>
         <div className="mb-7 flex flex-wrap gap-3.5">
-          <NeoButton href="/game/new" size="lg">
+          <NeoButton href="/game/new?game=mines" size="lg">
             Start a Duel ▸
           </NeoButton>
           <NeoButton href="#how" size="lg" variant="ghost">

@@ -85,6 +85,7 @@ export const GAME_MODES = [
     body: "One player places the mines, the other reveals tiles. Every safe pick raises the payout.",
     span: 1,
     tone: "hot" as const,
+    href: "/game/new?game=mines",
   },
   {
     icon: "📈",

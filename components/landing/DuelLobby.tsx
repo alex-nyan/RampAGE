@@ -1,9 +1,11 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import type { GameId } from "@/lib/types";
 
-const GAMES = [
+const GAMES: { id: GameId; label: string }[] = [
+  { id: "mines", label: "💣 Mines Duel" },
   { id: "receipt-blitz", label: "🧾 Receipt Blitz" },
   { id: "flip", label: "🪙 Flip" },
   { id: "split-or-steal", label: "🤝 Split or Steal" },
@@ -11,6 +13,8 @@ const GAMES = [
 
 export function DuelLobby() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const highlight = searchParams.get("game");
   const [duelId, setDuelId] = useState("");
   const [creating, setCreating] = useState<string | null>(null);
 
@@ -27,6 +31,7 @@ export function DuelLobby() {
     try {
       const res = await fetch("/api/rooms", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           challengerName: sessionStorage.getItem("rampage_name") ?? "challenger",
           gameId,
@@ -46,13 +51,16 @@ export function DuelLobby() {
         <h1 className="mb-6 block text-center font-display text-[38px] uppercase leading-tight sm:text-[56px]">
           Start a duel
         </h1>
-        <div className="mb-8 grid gap-3 sm:grid-cols-3">
+        <div className="mb-8 grid gap-3 sm:grid-cols-2">
           {GAMES.map((g) => (
             <button
               key={g.id}
+              type="button"
               onClick={() => createDuel(g.id)}
               disabled={!!creating}
-              className="rounded-2xl border-[3px] border-acid bg-night px-4 py-5 font-display text-[15px] uppercase text-acid shadow-[6px_6px_0_#e4f222] transition hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[8px_8px_0_#e4f222] disabled:opacity-50"
+              className={`rounded-2xl border-[3px] border-acid bg-night px-4 py-5 font-display text-[15px] uppercase text-acid shadow-[6px_6px_0_#e4f222] transition hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[8px_8px_0_#e4f222] disabled:opacity-50 ${
+                highlight === g.id ? "bg-acid text-night" : ""
+              }`}
             >
               {creating === g.id ? "Opening…" : g.label}
             </button>
