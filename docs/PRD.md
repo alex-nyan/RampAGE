@@ -1,7 +1,7 @@
 # RampAGE — PRD (updated for 4-hour feasibility)
 
-> **Status:** working spec. This supersedes `docs/PRD-original.md` (kept verbatim for
-> reference). It was re-scoped after a feasibility review against (a) the 4-hour clock,
+> **Status:** working spec — the single source of truth for the product. It was
+> re-scoped from an earlier draft after a feasibility review against (a) the 4-hour clock,
 > (b) the code already scaffolded in this repo, and (c) the hard rules in `CLAUDE.md`.
 > **Read `CLAUDE.md` first; this fills in the game + economy specifics.**
 
