@@ -13,6 +13,7 @@ const GAMES: { id: GameId; label: string }[] = [
   { id: "receipt-blitz", label: "🧾 Receipt Blitz" },
   { id: "flip", label: "🪙 Flip" },
   { id: "wordle-duel", label: "🔤 Word Duel · 60 sec" },
+  { id: "price-is-ramp", label: "💸 The Price Is Ramp" },
 ];
 
 export function DuelLobby() {

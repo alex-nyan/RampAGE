@@ -6,6 +6,7 @@ import FlipGame, { initialFlipState } from "@/components/games/flip/Game";
 import WordleDuelGame, { initialWordleState } from "@/components/games/wordle-duel/Game";
 import MinesGame from "@/components/games/mines/Game";
 import { initialMinesState } from "@/lib/games/mines/rules";
+import PriceIsRampGame, { initialPriceIsRampState } from "@/components/games/price-is-ramp/Game";
 
 import type { PayoutMode } from "@/lib/wager";
 
@@ -63,6 +64,14 @@ export const REGISTRY: Partial<Record<GameId, GameModule>> = {
     description: "One places 5 mines on a 6×6 — the other clears every safe cell.",
     Component: MinesGame,
     initialState: initialMinesState,
+    payoutMode: "skill",
+  },
+  "price-is-ramp": {
+    id: "price-is-ramp",
+    name: "The Price Is Ramp",
+    description: "Guess the company expense — closest without going over takes the round.",
+    Component: PriceIsRampGame,
+    initialState: initialPriceIsRampState,
     payoutMode: "skill",
   },
 };
